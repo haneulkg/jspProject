@@ -4,14 +4,15 @@ import java.io.IOException;
 import java.io.PrintWriter;
 import java.net.URLEncoder;
 
+import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-@WebServlet("/j1026/test10Ok")
-public class Test10Ok extends HttpServlet{
+@WebServlet("/j1026/test14Ok")
+public class Test14Ok extends HttpServlet{
 	private static final long serialVersionUID = 1L;
 
 	@Override
@@ -26,12 +27,10 @@ public class Test10Ok extends HttpServlet{
 		String[] hobbys = request.getParameterValues("hobby");
 		String job = request.getParameter("job")==null ? "" : request.getParameter("job");
 
-		System.out.println("age체크 : "+age);
-		
 		// 기본적으로 다시 체크해야할 것들 체크하기(잘못된 자료:돌려보냄, 정상인 자료:DB에 저장시킴)
 		if(name.equals("") || age < 20) {
 			// 가입조건을 만족시키지 못했을 경우 다시 가입창으로 전송시켜주기
-			response.sendRedirect(request.getContextPath()+"/study/1026/test10.jsp?flag=no");
+			response.sendRedirect(request.getContextPath()+"/study/1026/test14.jsp?flag=no");
 		}
 		else {
 			// 가입조건에 만족했을 경우 DB에 저장시키고 회원 메인창(test10Res.jsp)으로 이동시키기
@@ -46,22 +45,23 @@ public class Test10Ok extends HttpServlet{
 			}
 			hobby = hobby.substring(0, hobby.length()-1);
 			System.out.println("취미 : "+hobby);
+			System.out.println("직업 : "+job);
 			
-			// DB에 저장완료 후 jsp로 이동처리하기
-//			out.println("<script>");
-//			out.println("alert('😀 회원 가입 성공 😀');");
-//			out.println("location.href='"+request.getContextPath()+"/study/1026/test8.jsp';");
-//			out.println("</script>");
+			Test13VO vo = new Test13VO();
 			
-//			response.sendRedirect(request.getContextPath()+"/study/1026/test9.jsp?flag=ok");  // Front의 location.href방식과 같은 방식임
+			vo.setName(name);
+			vo.setAge(age);
+			vo.setGender(gender);
+			vo.setHobby(hobby);
+			vo.setJob(job);
 			
-			// 한글인 경우 : 인코딩문제로 브라우저에서 에러로 체크가 됨
-			name = URLEncoder.encode(name, "utf-8");
-			gender = URLEncoder.encode(gender, "utf-8");
-			hobby = URLEncoder.encode(hobby, "utf-8");
-			job = URLEncoder.encode(job, "utf-8");
+			// request 저장소에 전송하려고 하는 자료들을 모두 담아주기 : request("변수명", 전송값)
+			request.setAttribute("vo", vo);
 			
-			response.sendRedirect(request.getContextPath()+"/study/1026/test10Res.jsp?name="+name+"&age="+age+"&gender="+gender+"&hobby="+hobby+"&job="+job);  // Front의 location.href방식과 같은 방식임
+			String viewPage = "/study/1026/test14Res.jsp";
+			
+			RequestDispatcher dispatcher = request.getRequestDispatcher(viewPage);
+			dispatcher.forward(request, response);
 		}
 		
 	}
