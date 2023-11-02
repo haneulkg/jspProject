@@ -35,15 +35,15 @@
     <c:if test="${!empty sDan && !empty eDan}">
       <table class="table text-center">
         <tr>
-		      <c:forEach var="i" begin="${sDan}" end="${eDan}">
-			      <td>* ${i} 단 *<br/>
-				    	<c:forEach var="j" begin="1" end="9">
-					      ${i} * ${j} = ${i * j}<br/>
-					    </c:forEach>
-				    </td>
-				    <c:set var="cnt" value="${cnt + 1}"/>
-				    <c:if test="${cnt % su == 0}"></td></tr><tr></c:if>
-			    </c:forEach>
+	      <c:forEach var="i" begin="${sDan}" end="${eDan}">
+		      <td>* ${i} 단 *<br/>
+			    	<c:forEach var="j" begin="1" end="9">
+				      ${i} * ${j} = ${i * j}<br/>
+				    </c:forEach>
+			    </td>
+			    <c:set var="cnt" value="${cnt + 1}"/>
+			    <c:if test="${cnt % su == 0}"></td></tr><tr></c:if>
+		    </c:forEach>
 		    </tr>
 	    </table>
     </c:if>
