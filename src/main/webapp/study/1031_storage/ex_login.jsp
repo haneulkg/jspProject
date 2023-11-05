@@ -1,5 +1,5 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
-<%
+<%-- <%
 	Cookie[] cookies = request.getCookies();
 	String cookieMid = "";
 	
@@ -7,7 +7,7 @@
 	      if(cookies[i].getName().equals("cMid")){
 	          cookieMid = cookies[i].getValue();
 	  }	
-%>
+%> --%>
 <!DOCTYPE html>
 <html>
 <head>
