@@ -18,7 +18,7 @@ public class DeleteOk extends HttpServlet{
 		HttpSession session = request.getSession();
 		String mid = (String) session.getAttribute("sMid");
 		
-		LoginDAO dao = new LoginDAO();
+		LoginDAO1 dao = new LoginDAO1();
 		
 		int res = dao.setDeleteOk(mid);
 

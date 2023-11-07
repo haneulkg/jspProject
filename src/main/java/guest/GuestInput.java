@@ -20,6 +20,8 @@ public class GuestInput extends HttpServlet {
 		String content = request.getParameter("content")==null ? "" : request.getParameter("content");
 		String hostIpString = request.getRemoteAddr();
 		
+		name = name.replace("<", "&lt;");
+		name = name.replace(">", "&gt;");
 
 		GuestDAO dao = new GuestDAO();
 		GuestVO vo = new GuestVO();

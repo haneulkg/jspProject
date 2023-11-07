@@ -18,7 +18,7 @@ public class JoinOk extends HttpServlet{
 		String name = request.getParameter("name")==null ? "" :request.getParameter("name");
 		String pwd = request.getParameter("pwd")==null ? "" :request.getParameter("pwd");
 		
-		LoginDAO dao = new LoginDAO();
+		LoginDAO1 dao = new LoginDAO1();
 		
 		LoginVO vo = new LoginVO();
 		vo.setMid(mid);

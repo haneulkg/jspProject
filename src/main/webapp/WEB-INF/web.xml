@@ -60,4 +60,13 @@
    		<param-value>http://162.168.50.54:9090/javaProject/study/1102_web.xml/test1.jsp</param-value>
 	</context-param>
 	
+<!-- 	dbcp 설정 선언 
+	<resource-ref>
+		<description>connection</description>
+		<res-ref-name>dbcp_mysql</res-ref-name>
+		<res-type>javax.sql.DataSource</res-type>
+		<res-auth>Container</res-auth>
+	</resource-ref> 
+-->
+	
 </web-app>

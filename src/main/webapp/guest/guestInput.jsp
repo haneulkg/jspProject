@@ -1,5 +1,6 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
+
 <c:set var="ctp" value="${pageContext.request.contextPath}" />
 <!DOCTYPE html>
 <html>
@@ -13,7 +14,7 @@
 <jsp:include page="/include/header.jsp"/>
 	<p><br/></p>
 	<div class="container">
-		<h2>방명록 리스트</h2>
+		<h2 style="text-align: center">글쓰기</h2>
 		<br/><br/>
 		<form name="myform" method="post" action="${ctp}/GuestInput">
 			<table class="table table-bordered">
@@ -27,7 +28,7 @@
 				</tr>
 				<tr>
 					<th>홈페이지 주소</th>
-					<td><input type="text" name="homePage" id="homePage" class="form-control" required></td>
+					<td><input type="text" name="homePage" id="homePage" class="form-control" value="https://" required></td>
 				</tr>
 				<tr>
 					<td colspan="2"><textarea name="content" id="content" rows="10" class="form-control" required></textarea></td>

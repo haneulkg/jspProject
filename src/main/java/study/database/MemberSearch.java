@@ -16,7 +16,7 @@ public class MemberSearch extends HttpServlet {
   protected void service(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
   	String mid = request.getParameter("mid")==null ? "" : request.getParameter("mid");
   	
-  	LoginDAO dao = new LoginDAO();
+  	LoginDAO1 dao = new LoginDAO1();
   	
   	LoginVO vo = dao.getLoginSearch(mid);
   	

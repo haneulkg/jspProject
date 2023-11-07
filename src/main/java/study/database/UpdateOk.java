@@ -19,7 +19,7 @@ public class UpdateOk extends HttpServlet{
 		String pwd = request.getParameter("pwd")==null ? "" : request.getParameter("pwd");
 		String name = request.getParameter("name")==null ? "" : request.getParameter("name");
 	
-		LoginDAO dao = new LoginDAO();
+		LoginDAO1 dao = new LoginDAO1();
 		
 		// 비밀번호 체크하기
 		LoginVO vo = dao.getLoginCheck(mid, pwd);
