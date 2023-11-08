@@ -39,7 +39,7 @@
   </table>
   <br/>
   <div>
-    <a href="${ctp}/study/database/memberMain.jsp" class="btn btn-success">돌아가기</a>
+    <a href="memberMain.lo" class="btn btn-success">돌아가기</a>
   </div>
 </div>
 <p><br/></p>

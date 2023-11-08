@@ -28,12 +28,12 @@ public class LoginController extends HttpServlet{
 		else if(com.equals("/loginOk")) {
 			command = new LoginOkCommand();
 			command.execute(request, response);
-			viewPage = "include/message.jsp";
+			viewPage = "/include/message.jsp";
 		}
 		else if(com.equals("/joinOk")) {
 			command = new JoinOkCommand();
 			command.execute(request, response);
-			viewPage = "include/message.jsp";
+			viewPage = "/include/message.jsp";
 		}
 		else if(com.equals("/memberMain")) {
 			viewPage += "/memberMain.jsp";
@@ -51,7 +51,7 @@ public class LoginController extends HttpServlet{
 		else if(com.equals("/updateOk")) {
 			command = new UpDateCommand();
 			command.execute(request, response);
-			viewPage = "include/message.jsp";
+			viewPage = "/include/message.jsp";
 		} 
 		else if(com.equals("/update")) {
 			viewPage += "/update.jsp";
@@ -59,12 +59,12 @@ public class LoginController extends HttpServlet{
 		else if(com.equals("/logout")) {
 			command = new LogoutCommand();
 			command.execute(request, response);
-			viewPage = "include/message.jsp";
+			viewPage = "/include/message.jsp";
 		}
 		else if(com.equals("/deleteOk")) {
 			command = new DeleteOkCommand();
 			command.execute(request, response);
-			viewPage = "include/message.jsp";
+			viewPage = "/include/message.jsp";
 		}
  		request.getRequestDispatcher(viewPage).forward(request, response);
 	}

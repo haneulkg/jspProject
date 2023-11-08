@@ -72,11 +72,11 @@ public class LoginOkCommand implements LoginInterface {
 			response.addCookie(cookieMid);
 			// 메세지 처리
 			request.setAttribute("msg", vo.getName()+"님 로그인 되었습니다 - 😃");
-			request.setAttribute("url", request.getContextPath()+"/memberMain.lo");			
+			request.setAttribute("url", "memberMain.lo");			
 		}
 		else {
 			request.setAttribute("msg", "로그인 실패 - 😥");
-			request.setAttribute("url", request.getContextPath()+"/login.lo");			
+			request.setAttribute("url", "login.lo");			
 		}
 	}
 

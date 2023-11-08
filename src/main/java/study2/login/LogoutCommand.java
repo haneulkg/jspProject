@@ -20,7 +20,7 @@ public class LogoutCommand implements LoginInterface {
 		session.invalidate();
 		
 		request.setAttribute("msg", mid+"님 로그아웃 되셨습니다");
-		request.setAttribute("url", request.getContextPath()+"/login.lo");
+		request.setAttribute("url","login.lo");
 	}
 
 }

@@ -1,13 +1,15 @@
-package study2.login;
+package study2;
 
 import java.io.IOException;
 
-import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-public class MemberSearchCommand implements LoginInterface {
+import study2.login.LoginDAO;
+import study2.login.LoginVO;
+
+public class AjaxTest1OkCommand implements StudyInterface {
 
 	@Override
 	public void execute(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
@@ -17,9 +19,13 @@ public class MemberSearchCommand implements LoginInterface {
 		
 		LoginVO vo = dao.getLoginSearch(mid);
 		
-		request.setAttribute("vo", vo);
-		
-		/* if(vo.get) */
+		if(vo.getName() != null) {
+			request.setAttribute("msg", vo.getName()+"님 환영합니다-😀");
+		}
+		else {
+			request.setAttribute("msg", "등록된 회원이 아닙니다-😥");
+		}
+		request.setAttribute("url", "ajaxTest1.st");
 	}
 
 }

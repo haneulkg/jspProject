@@ -27,10 +27,11 @@
 		      <a class="dropdown-item" href="${ctp}/mapping/test5.do">확장자 패턴</a>
 		      <a class="dropdown-item" href="${ctp}/mapping/test5.re">확장자 패턴2</a>
 		      <a class="dropdown-item" href="${ctp}/mapping/login.lo">로그인 연습</a>
+		      <a class="dropdown-item" href="ajaxTest1.st">Ajax 연습-1</a>
+		      <a class="dropdown-item" href="userList.us">Ajax 연습-2</a>
 		    </div>
 		  </div>
-      </li>
-          
+		</li>
     </ul>
   </div>  
 </nav>

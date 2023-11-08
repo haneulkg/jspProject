@@ -23,7 +23,7 @@ public class UpDateCommand implements LoginInterface {
 		
 		if(vo.getMid() == null) {
 			request.setAttribute("msg", "비밀번호 오류 : 비밀번호를 확인해주세요");
-			request.setAttribute("url", request.getContextPath()+"/update.lo");
+			request.setAttribute("url", "update.lo");
 		}
 		
 		vo = new LoginVO();
@@ -36,10 +36,10 @@ public class UpDateCommand implements LoginInterface {
 			HttpSession session = request.getSession();
 			session.setAttribute("sName", name);
 			request.setAttribute("msg", mid+"님 정보가 수정되었습니다");
-			request.setAttribute("url", request.getContextPath()+"/memberMain.lo");
+			request.setAttribute("url", "memberMain.lo");
 		} else {
 			request.setAttribute("msg", "회원 정보 수정 실패");
-			request.setAttribute("url", request.getContextPath()+"/update.lo");
+			request.setAttribute("url", "update.lo");
 		}			
 	}
 

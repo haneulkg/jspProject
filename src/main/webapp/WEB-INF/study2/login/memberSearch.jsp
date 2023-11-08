@@ -57,7 +57,7 @@
     </c:if>
     <tr>
       <td colspan="2">
-        <input type="button" value="돌아가기" onclick="location.href='${ctp}/study/database/memberMain.lo';" class="btn btn-success" />
+        <input type="button" value="돌아가기" onclick="location.href='memberMain.lo';" class="btn btn-success" />
       </td>
     </tr>
   </table>
