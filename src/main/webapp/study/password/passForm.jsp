@@ -34,7 +34,7 @@
 		<form name="myform" method="post" action="${ctp}/password/passOk1">
 		  	<table class="table table-bordered">
 				<tr>
-					<td colspan="2" class="text-center"><h2>회원 로그인</h2></td>
+					<td colspan="2" class="text-center"><h2>암호화 연습</h2></td>
 				</tr>
 				<tr>
 					<th>아이디</th>

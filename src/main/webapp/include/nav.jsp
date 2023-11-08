@@ -22,9 +22,11 @@
 		  <div class="dropdown">
 		    <button type="button" class="btn btn-secondary dropdown-toggle" data-toggle="dropdown">Study1</button>
 		    <div class="dropdown-menu">
-		      <a class="dropdown-item" href="${ctp}/study/password/passForm.jsp">암호화연습</a>
-		      <a class="dropdown-item" href="#"></a>
-		      <a class="dropdown-item" href="#">Link 3</a>
+		      <a class="dropdown-item" href="${ctp}/study/password/passForm.jsp">암호화 연습</a>
+		      <a class="dropdown-item" href="${ctp}/mapping/test1">디렉토리 패턴</a>
+		      <a class="dropdown-item" href="${ctp}/mapping/test5.do">확장자 패턴</a>
+		      <a class="dropdown-item" href="${ctp}/mapping/test5.re">확장자 패턴2</a>
+		      <a class="dropdown-item" href="${ctp}/mapping/login.lo">로그인 연습</a>
 		    </div>
 		  </div>
       </li>
