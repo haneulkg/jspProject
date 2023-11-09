@@ -29,6 +29,7 @@
 		      <a class="dropdown-item" href="${ctp}/mapping/login.lo">로그인 연습</a>
 		      <a class="dropdown-item" href="ajaxTest1.st">Ajax 연습-1</a>
 		      <a class="dropdown-item" href="userList.us">Ajax 연습-2</a>
+		      <a class="dropdown-item" href="login.alo">Ajax 연습-3</a>
 		    </div>
 		  </div>
 		</li>

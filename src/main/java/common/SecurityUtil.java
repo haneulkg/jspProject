@@ -8,6 +8,8 @@ public class SecurityUtil {
     String sha = "";
     try{
        MessageDigest sh = MessageDigest.getInstance("SHA-256");
+//       int salt = (int)(Math.random()*100)+1;
+//       str += salt;  -- 난수 발생시켜 DB에 저장 (암호화시에 사용)
        sh.update(str.getBytes());
        byte byteData[] = sh.digest();
        StringBuffer sb = new StringBuffer();
@@ -19,6 +21,6 @@ public class SecurityUtil {
        System.out.println("Encrypt Error - NoSuchAlgorithmException");
        sha = null;
    }
-   return sha;
+   return sha; // return 시에 salt도 같이 return시켜줌 
  } 
 }
