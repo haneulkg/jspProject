@@ -22,10 +22,10 @@
     	
     	let regMid = /^[a-zA-Z0-9_]{4,20}$/;
     	let regPwd = /(?=.*[0-9a-zA-Z]).{4,20}$/;
-      	let regNickName = /^[가-힣]+$/;
-     	let regName = /^[가-힣a-zA-Z]+$/;
-     	let regEmail =/^([\w-]+(?:\.[\w-]+)*)@((?:[\w-]+\.)*\w[\w-]{0,66})\.([a-z]{2,6}(?:\.[a-z]{2})?)$/;
-    	let regURL = /^(https?:\/\/)?([a-z\d\.-]+)\.([a-z\.]{2,6})([\/\w\.-]*)*\/?$/;
+      let regNickName = /^[가-힣]+$/;
+      let regName = /^[가-힣a-zA-Z]+$/;
+      let regEmail =/^([\w-]+(?:\.[\w-]+)*)@((?:[\w-]+\.)*\w[\w-]{0,66})\.([a-z]{2,6}(?:\.[a-z]{2})?)$/;
+      let regURL = /^(https?:\/\/)?([a-z\d\.-]+)\.([a-z\.]{2,6})([\/\w\.-]*)*\/?$/;
     	let regTel = /\d{2,3}-\d{3,4}-\d{4}$/g;
     	
     	let mid = myform.mid.value.trim();
@@ -54,31 +54,31 @@
         alert("비밀번호는 1개이상의 문자와 특수문자 조합의 6~24 자리로 작성해주세요.");
         myform.pwd.focus();
         return false;
-        }
-        else if(!regNickName.test(nickName)) {
-          alert("닉네임은 한글만 사용가능합니다.");
-          myform.nickName.focus();
-          return false;
-        }
-        else if(!regName.test(name)) {
-          alert("성명은 한글과 영문대소문자만 사용가능합니다.");
-          myform.name.focus();
-          return false;
-        }
-        else if(!regEmail.test(email)) {
-          alert("이메일 형식에 맞지않습니다.");
-          myform.email1.focus();
-          return false;
-        }
-        else if((homePage != "http://" && homePage != "")) {
-          if(!regURL.test(homePage)) {
+      }
+      else if(!regNickName.test(nickName)) {
+        alert("닉네임은 한글만 사용가능합니다.");
+        myform.nickName.focus();
+        return false;
+      }
+      else if(!regName.test(name)) {
+        alert("성명은 한글과 영문대소문자만 사용가능합니다.");
+        myform.name.focus();
+        return false;
+      }
+      else if(!regEmail.test(email)) {
+        alert("이메일 형식에 맞지않습니다.");
+        myform.email1.focus();
+        return false;
+      }
+      else if((homePage != "http://" && homePage != "")) {
+        if(!regURL.test(homePage)) {
 	        alert("작성하신 홈페이지 주소가 URL 형식에 맞지않습니다.");
 	        myform.homePage.focus();
 	        return false;
         }
         else {
 	    	  submitFlag = 1;
-	    }
+	      }
       }
     	
     	if(tel2 != "" && tel3 != "") {

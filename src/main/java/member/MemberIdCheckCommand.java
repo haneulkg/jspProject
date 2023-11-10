@@ -16,9 +16,12 @@ public class MemberIdCheckCommand implements MemberInterface {
 		
 		MemberVO vo = dao.getMemberMidCheck(mid);
 		
-		if(vo.getMid() == null) request.setAttribute("res", 1); // 사용 가능한 아이디 : res = 1
-		else request.setAttribute("res", 0); // 사용중인 아이디 : res = 0
-		
+		if(vo.getMid() == null) {
+			request.setAttribute("res", 1);	// 사용 가능한 아이디
+		}
+		else {
+			request.setAttribute("res", 0);	// 이미 사용중인 아이디
+		}
 		request.setAttribute("mid", mid);
 	}
 

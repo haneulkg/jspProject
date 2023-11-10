@@ -6,16 +6,17 @@
 <head>
 	<meta charset="UTF-8">
 	<meta name="viewport" content="width=device-width, initial-scale=1">
-	<title>message.jsp</title>
+	<title>adminContent.jsp</title>
 	<jsp:include page="/include/bs4.jsp" />
-	<script>
-		'use strict';
-		
-		if('${msg}' != 'NO') alert("${msg}");
-		location.href = "${url}";		
-	</script>
 </head>
 <body>
-
+	<p><br/></p>
+	<div class="container">
+		<h3>관리자 메인화면</h3>
+		<hr/>
+		<p>방명록 새글 : ?? </p>
+		<p>게시글 새글 : ?? </p>
+		<p>신규등록회원 : ?? </p>		
+	</div>
 </body>
 </html>

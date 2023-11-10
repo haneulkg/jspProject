@@ -1,34 +1,31 @@
 package member;
 
 import java.io.IOException;
-import java.util.ArrayList;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
-import guest.GuestDAO;
-import guest.GuestVO;
+import common.SecurityUtil;
 
-public class MemberMainCommand implements MemberInterface {
+public class memberPwdChangeOkCommand implements MemberInterface {
 
 	@Override
 	public void execute(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		HttpSession session = request.getSession();
-		
 		String mid = (String) session.getAttribute("sMid");
 		
-		MemberDAO memberDao = new MemberDAO();
-		MemberVO mVo = memberDao.getMemberMidCheck(mid);
+		String pwd = request.getParameter("pwd")==null ? "" : request.getParameter("pwd");
 		
-		GuestDAO guestDao = new GuestDAO();
-		ArrayList<GuestVO> gVos = guestDao.getMemberSearch(mid, mVo.getName(), mVo.getNickName());
+		SecurityUtil security = new SecurityUtil();
+		pwd = security.encryptSHA256(pwd);
 		
-		request.setAttribute("mVo", mVo);
-		request.setAttribute("gVos", gVos);
+		MemberDAO dao = new MemberDAO();
 		
+		dao.setMemberPwdUpdate(mid, pwd);
 		
+		response.getWriter().write("1");
 	}
 
 }
