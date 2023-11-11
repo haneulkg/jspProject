@@ -7,6 +7,8 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 
+import member.MemberVO;
+
 public class GuestDAO {
 	private Connection conn = null;
 	private PreparedStatement pstmt = null;
@@ -14,6 +16,7 @@ public class GuestDAO {
 	
 	String sql = "";
 	GuestVO vo = null;
+	MemberVO mVo = null;
 	
 	public GuestDAO() {
 		String url = "jdbc:mysql://localhost:3306/javaProject";
@@ -170,5 +173,6 @@ public class GuestDAO {
 			rsClose();
 		}
 		return vos;
-	}	
+	}
+
 }

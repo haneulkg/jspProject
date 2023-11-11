@@ -9,6 +9,12 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>memberMain.jsp</title>
   <jsp:include page="/include/bs4.jsp" />
+  <script>
+	function pageCheck() {
+		let pageSize = document.getElementById("pageSize").value;
+		location.href='${ctp}/memberList?pag=${pag}&pageSize='+pageSize;
+	}  
+  </script>
 </head>
 <body>
 <jsp:include page="/include/header.jsp" />

@@ -356,5 +356,69 @@ public class MemberDAO {
 		}
 		return vos;
 	}
+
+	public int getTotRecCntAd() {
+		int totRecCnt = 0;
+		try {
+			sql = "select count(*) as cnt from member";
+			pstmt = conn.prepareStatement(sql);
+			rs = pstmt.executeQuery();
+			rs.next();
+			totRecCnt = rs.getInt("cnt");
+		} catch (SQLException e) {
+			System.out.println("SQL 구문 오류 - " + e.getMessage());
+		} finally {
+			rsClose();
+		}
+		return totRecCnt;
+	}
+
+	public ArrayList<MemberVO> getGuestList2(int startIndexNo, int pageSize) {
+		ArrayList<MemberVO> vos = new ArrayList<MemberVO>();
+		
+		try {
+			sql = "select * from member order by idx desc limit ?,?";
+			pstmt = conn.prepareStatement(sql);
+			pstmt.setInt(1, startIndexNo);
+			pstmt.setInt(2, pageSize);
+			rs = pstmt.executeQuery();
+			
+			while(rs.next()) {
+				vo = new MemberVO();
+				vo.setIdx(rs.getInt("idx"));
+				vo.setMid(rs.getString("mid"));
+				vo.setPwd(rs.getString("pwd"));
+				vo.setNickName(rs.getString("nickName"));
+				vo.setName(rs.getString("name"));
+				vo.setGender(rs.getString("gender"));
+				vo.setBirthday(rs.getString("birthday"));
+				vo.setTel(rs.getString("tel"));
+				vo.setAddress(rs.getString("address"));
+				vo.setEmail(rs.getString("email"));
+				vo.setHomePage(rs.getString("homePage"));
+				vo.setJob(rs.getString("job"));
+				vo.setHobby(rs.getString("hobby"));
+				vo.setPhoto(rs.getString("photo"));
+				vo.setContent(rs.getString("content"));
+				vo.setUserInfor(rs.getString("userInfor"));
+				vo.setUserDel(rs.getString("userDel"));
+				vo.setPoint(rs.getInt("point"));
+				vo.setLevel(rs.getInt("level"));
+				vo.setVisitCnt(rs.getInt("visitCnt"));
+				vo.setStartDate(rs.getString("startDate"));
+				vo.setLastDate(rs.getString("lastDate"));
+				vo.setTodayCnt(rs.getInt("todayCnt"));
+				
+				vos.add(vo);
+				
+			}
+		} catch (SQLException e) {
+			System.out.println("SQL 오류 " +e.getMessage());
+		} finally {
+			rsClose();
+		}
+		
+		return vos;
+	}
 	
 }

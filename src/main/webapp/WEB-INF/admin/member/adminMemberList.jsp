@@ -51,6 +51,13 @@
 				location.href = "memberLevelSearch.ad?level="+level;
 			}
 		}
+		
+		// 페이징처리하기
+		function pageCheck() {
+			let pageSize = document.getElementById("pageSize").value;
+			location.href='adminMemberList.ad?pag=${pag}&pageSize='+pageSize;
+		}		
+		
 	</script>
 	<style>
 	.page-link {
@@ -63,7 +70,6 @@
 	 z-index: 1;
 	 color: black;
 	 font-weight:bold;
-	 /* background-color: #f1f1f1; */
 	 background-color: gray;
 	 border-color: #ccc;
 	 
@@ -71,7 +77,6 @@
 	
 	.page-link:focus, .page-link:hover {
 	  color: #000;
-	  /* background-color: #fafafa; */ 
 	  background-color: lightgray; 
 	  border-color: #ccc;
 	}
@@ -80,8 +85,8 @@
 <body>
 	<p><br/></p>
 	<div class="container">
-		<h2>📜 전체 회원 리스트 📜</h2>
-		<table class="table">
+		<h2 class="text-center">📜 전체 회원 리스트 📜</h2>
+		<table class="table table-borderless">
 			<tr>
 				<td>
 					<form name="memberLevelForm">
@@ -110,16 +115,17 @@
 				</td>
 				<td class="text-right">
 					<c:if test="${pag > 1}">
-						<a href="${ctp}/GuestList?pag=1&pageSize=${pageSize}" title="첫페이지">⏪</a>&nbsp;&nbsp;
-						<a href="${ctp}/GuestList?pag=${pag-1}&pageSize=${pageSize}" title="이전페이지">◀</a>	
+						<a href="${ctp}/adminMemberList.ad?pag=1&pageSize=${pageSize}" title="첫페이지">⏪</a>&nbsp;&nbsp;
+						<a href="${ctp}/adminMemberList.ad?pag=${pag-1}&pageSize=${pageSize}" title="이전페이지">◀</a>	
 					</c:if>	
 					${pag}/${totPage}				
 					<c:if test="${pag < totPage}">
-						<a href="${ctp}/GuestList?pag=${pag+1}&pageSize=${pageSize}" title="다음페이지">▶</a>&nbsp;&nbsp;	
-						<a href="${ctp}/GuestList?pag=${totPage}&pageSize=${pageSize}" title="마지막페이지">⏩</a>	
+						<a href="${ctp}/adminMemberList.ad?pag=${pag+1}&pageSize=${pageSize}" title="다음페이지">▶</a>&nbsp;&nbsp;	
+						<a href="${ctp}/adminMemberList.ad?pag=${totPage}&pageSize=${pageSize}" title="마지막페이지">⏩</a>	
 					</c:if>						
 				</td>
-		</table>		
+			</tr>
+		</table>
 		<table class="table table-hover">
 			<tr class="table-dark text-dark">
 				<th>번호</th>
@@ -154,6 +160,7 @@
 			</c:forEach>
 			<tr><td colspan="8" class="m-0 p-0"></td></tr>
 		</table>
+			<c:set var="curScrStartNo" value="${curScrStartNo-1}"/>	
 		<!-- 페이징 처리 -->
 		<div class="text-center">
 		
@@ -161,7 +168,7 @@
 			
 				<li class="page-item">
 					<c:if test = "${curBlock > 0}">
-						<a class="page-link" href="${ctp}/GuestList?pag=${(curBlock-1)*blockSize+1}&pageSize=${pageSize}">이전블록</a>
+						<a class="page-link" href="adminMemberList.ad?pag=${(curBlock-1)*blockSize+1}&pageSize=${pageSize}">이전블록</a>
 					</c:if>
 				</li>
 	
@@ -172,13 +179,13 @@
 						
 							<c:if test="${i==pag}">
 								<li class="page-item active">
-									<a class="page-link" href = "${ctp}/GuestList?pag=${i}&pageSize=${pageSize}">${i}</a>
+									<a class="page-link" href = "adminMemberList.ad?pag=${i}&pageSize=${pageSize}">${i}</a>
 								</li>
 							</c:if>
 							
 							<c:if test="${i!=pag}">
 								<li class="page-item">
-									<a class="page-link" href = "${ctp}/GuestList?pag=${i}&pageSize=${pageSize}">${i}</a>
+									<a class="page-link" href = "adminMemberList.ad?pag=${i}&pageSize=${pageSize}">${i}</a>
 								</li>
 							</c:if>
 							
@@ -187,7 +194,7 @@
 				</c:forEach>
 				<c:if test = "${curBlock < lastBlock}">
 					<li class="page-item">
-						<a class="page-link" href="${ctp}/GuestList?pag=${(curBlock+1)*blockSize+1}&pageSize=${pageSize}">다음블록</a>
+						<a class="page-link" href="adminMemberList.ad?pag=${(curBlock+1)*blockSize+1}&pageSize=${pageSize}">다음블록</a>
 					</li>
 				</c:if>
 			</ul>

@@ -50,11 +50,9 @@ public class GuestList extends HttpServlet{
 		ArrayList<GuestVO> vos = dao.getGuestList(startIndexNo, pageSize);
 		
 		request.setAttribute("vos", vos);
-		request.setAttribute("pag", pag);
 		request.setAttribute("totPage", totPage);
 		request.setAttribute("pageSize", pageSize);
 		request.setAttribute("curScrStartNo", curScrStartNo);
-		request.setAttribute("pag", pag);
 		request.setAttribute("pag", pag);
 		request.setAttribute("blockSize", blockSize);
 		request.setAttribute("curBlock", curBlock);
