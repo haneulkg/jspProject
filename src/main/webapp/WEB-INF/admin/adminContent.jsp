@@ -16,7 +16,7 @@
 		<hr/>
 		<p>방명록 새글 : ?? </p>
 		<p>게시글 새글 : ?? </p>
-		<p>신규등록회원 : <a href="memberLevelSearch.ad?level=1&Vlevel=1">${newMember}</a> </p>		
+		<p>신규등록회원 : <a href="memberLevelSearch.ad?level=1&Vlevel=1">${newMember} 명</a></p>		
 	</div>
 </body>
 </html>

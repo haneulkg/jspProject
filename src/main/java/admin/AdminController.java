@@ -25,7 +25,12 @@ public class AdminController extends HttpServlet {
 		HttpSession session = request.getSession();
 		int level = session.getAttribute("sLevel")==null ? 99 : (int)session.getAttribute("sLevel");
 		
-		if(level > 0) {
+		if(com.equals("/main")) {
+			command = new MainCommand();
+			command.execute(request, response);
+			viewPage = "/WEB-INF/main/main.jsp";
+		}
+		else if(level > 0) {
 			request.getRequestDispatcher("/").forward(request, response);
 		}
 		else if(com.equals("/adminMain")) {

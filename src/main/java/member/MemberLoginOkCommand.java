@@ -1,6 +1,7 @@
 package member;
 
 import java.io.IOException;
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
@@ -57,6 +58,25 @@ public class MemberLoginOkCommand implements MemberInterface {
 			// 오늘 처음 방문한 경우는 방문카운트를 1로 초기화하고 10포인트 증정
 			vo.setTodayCnt(1);
 			vo.setPoint(vo.getPoint()+10);
+		}
+		
+		// 자동 등업처리(정회원)
+		// 가입후 10일이내에 5회 이상 접속시 자동으로 정회원 등업처리하기 (단, 1일 1회 한정이나 여기서는 고려X)
+		try {
+			Date today2 = new Date();
+//			SimpleDateFormat sdf2 = new SimpleDateFormat("yyyy-MM-dd");
+//			String strToday2 = sdf2.format(today2);
+//			Date date1 = new SimpleDateFormat("yyyy-MM-dd").parse(strToday2);
+			Date date2 = new SimpleDateFormat("yyyy-MM-dd").parse(vo.getStartDate());
+			
+			//long diffDate = (date1.getDate() - date2.getDate());
+			long diffDate = (today2.getTime() - date2.getTime()) / (60*60*24*1000); // 날짜차이를 일수로 계산(1/1000 s)
+			//System.out.println("가입후 지난 날짜 : " + diffDate +"일");
+			
+			if(vo.getLevel()==1 && diffDate <= 10 && vo.getVisitCnt()+1 >= 5) vo.setLevel(2);
+				
+		} catch (ParseException e) {
+			e.printStackTrace();
 		}
 		
 		// 3.DB작업(변경된 내용들을 DB에 저장(갱신))
