@@ -5,6 +5,31 @@
   pageContext.setAttribute("level", level);  
 %>
 <c:set var="ctp" value="${pageContext.request.contextPath}" />
+<script>
+	function memberDelcheck() {
+		let ans = confirm("회원 탈퇴하시겠습니까 ?");
+		if (ans) {
+			let ans2 = confirm("탈퇴 후 같은 아이디로는 1개월간 재가입 불가합니다.\n그래도 탈퇴하시겠습니까 ?");
+			if(!ans2) return false;
+		}
+		else return false;
+		// 회원 탈퇴(ajax)
+		$.ajax({
+			url : "memberDeleteCheck.mem",
+			type : "post",
+			success : function(res) {
+				if(res != '1') alert("회원 탈퇴 실패");
+				else {
+					alert("회원 탈퇴 되었습니다");
+					location.href = "memberLogout.mem";
+				}
+			},
+			error : function() {
+				alert("전송오류");
+			}
+		});
+	}
+</script>
 <nav class="navbar navbar-expand-sm bg-dark navbar-dark">
 	<!-- 햄버거버튼 -->
   <!-- <a class="navbar-brand" href="http://localhost:9090/javaProject">Home</a> -->
@@ -46,7 +71,7 @@
 				    <div class="dropdown-menu">
 				      <a class="dropdown-item" href="memberMain.mem">회원메인방</a>
 				      <a class="dropdown-item" href="memberPwdCheck.mem">회원정보수정</a>
-				      <a class="dropdown-item" href="memberList.mem">회원리스트</a>
+				      <c:if test="${sLevel!=1}"><a class="dropdown-item" href="mAdminMemberList.mem">회원리스트</a></c:if>
 				      <a class="dropdown-item" href="javascript:memberDelcheck()">회원탈퇴</a>
 				      <c:if test="${sLevel == 0}"><a class="dropdown-item" href="adminMain.ad">관리자메뉴</a></c:if>
 				    </div>

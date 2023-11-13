@@ -44,7 +44,7 @@ public class MemberDAO {
 	public MemberVO getMemberMidCheck(String mid) {
 		vo = new MemberVO();
 		try {
-			sql = "select * from member where mid = ?";
+			sql = "select * from member where mid=?";
 			pstmt = conn.prepareStatement(sql);
 			pstmt.setString(1, mid);
 			rs = pstmt.executeQuery();
@@ -377,7 +377,7 @@ public class MemberDAO {
 		ArrayList<MemberVO> vos = new ArrayList<MemberVO>();
 		
 		try {
-			sql = "select * from member order by idx desc limit ?,?";
+			sql = "select *, timestampdiff(day,lastDate,now()) as deleteDiff from member order by idx desc limit ?,?";
 			pstmt = conn.prepareStatement(sql);
 			pstmt.setInt(1, startIndexNo);
 			pstmt.setInt(2, pageSize);
@@ -409,6 +409,8 @@ public class MemberDAO {
 				vo.setLastDate(rs.getString("lastDate"));
 				vo.setTodayCnt(rs.getInt("todayCnt"));
 				
+				vo.setDeleteDiff(rs.getInt("deleteDiff"));
+				
 				vos.add(vo);
 				
 			}
@@ -419,6 +421,79 @@ public class MemberDAO {
 		}
 		
 		return vos;
+	}
+
+	// 회원 탈퇴신청(userDel 필드의 값: NO -> OK로 변경하기)
+	public int setMemberDeleteCheck(String mid) {
+		int res = 0;
+		try {
+			sql = "update member set userDel='OK' where mid=?";
+			pstmt = conn.prepareStatement(sql);
+			pstmt.setString(1, mid);
+			res = pstmt.executeUpdate();
+		} catch (SQLException e) {
+			System.out.println("SQL 오류 " +e.getMessage());
+		} finally {
+			pstmtClose();
+		}
+		
+		return res;
+	}
+
+	// 탈퇴한 회원정보 삭제하기
+	public void setMemberDeleteOk(int idx) {
+		try {
+			sql = "delete from member where idx=?";
+			pstmt = conn.prepareStatement(sql);
+			pstmt.setInt(1, idx);
+			pstmt.executeUpdate();
+		} catch (SQLException e) {
+			System.out.println("SQL 오류 " +e.getMessage());
+		} finally {
+			pstmtClose();
+		}
+	}
+
+	public MemberVO getMemberInfor(int idx) {
+		MemberVO vo = new MemberVO();
+		try {
+			sql = "select * from member where idx=?";
+			pstmt = conn.prepareStatement(sql);
+			pstmt.setInt(1, idx);
+			rs=pstmt.executeQuery();
+			
+			if(rs.next()) {
+				vo = new MemberVO();
+				vo.setIdx(rs.getInt("idx"));
+				vo.setMid(rs.getString("mid"));
+				vo.setPwd(rs.getString("pwd"));
+				vo.setNickName(rs.getString("nickName"));
+				vo.setName(rs.getString("name"));
+				vo.setGender(rs.getString("gender"));
+				vo.setBirthday(rs.getString("birthday"));
+				vo.setTel(rs.getString("tel"));
+				vo.setAddress(rs.getString("address"));
+				vo.setEmail(rs.getString("email"));
+				vo.setHomePage(rs.getString("homePage"));
+				vo.setJob(rs.getString("job"));
+				vo.setHobby(rs.getString("hobby"));
+				vo.setPhoto(rs.getString("photo"));
+				vo.setContent(rs.getString("content"));
+				vo.setUserInfor(rs.getString("userInfor"));
+				vo.setUserDel(rs.getString("userDel"));
+				vo.setPoint(rs.getInt("point"));
+				vo.setLevel(rs.getInt("level"));
+				vo.setVisitCnt(rs.getInt("visitCnt"));
+				vo.setStartDate(rs.getString("startDate"));
+				vo.setLastDate(rs.getString("lastDate"));
+				vo.setTodayCnt(rs.getInt("todayCnt"));
+			}
+		} catch (SQLException e) {
+			System.out.println("SQL 오류 " +e.getMessage());
+		} finally {
+			pstmtClose();
+		}
+		return vo;
 	}
 	
 }

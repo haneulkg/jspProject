@@ -6,7 +6,7 @@ create table member (
 	pwd      varchar(100) not null,	   			 -- 회원 비밀번호(SHA256 암호화 처리)
 	nickName varchar(20) not null,     			 -- 회원 별명(중복불허)
 	name     varchar(20) not null,		   		 -- 회원 성명
-	gender   char(2) not null default '남자',  -- 회원 성별
+	gender   char(2) not null default '남자',     -- 회원 성별
 	birthday datetime default now(),	         -- 회원 생일
 	tel      varchar(15),                        -- 전화번호 : 010-1234-5678
 	address  varchar(100),						 -- 주소(다음 API 활용)
@@ -20,7 +20,7 @@ create table member (
 	userDel   char(2) default 'NO',              -- 회원 탈퇴 신청여부 (NO:현재 활동중, OK:탈퇴신청중)
 	point     int default 100,					 -- 회원 누적 포인트(가입포인트:100, 1회방문시:10증가, 1일 최대 50까지 허용, 물건구매시 100원당 1증가)
 	level     int default 1,                     -- 회원 등급(0:관리자|1:준회원|2:정회원|3:우수회원|(4:운영자))
-	visitCnt  int  default 0,                     -- 총 방문 횟수
+	visitCnt  int  default 0,                    -- 총 방문 횟수
 	startDate datetime default now(),            -- 최초 가입일
 	lastDate  datetime default now(),            -- 마지막 접속일
 	todayCnt  int default 0,                     -- 오늘 방문한 횟수
@@ -35,3 +35,6 @@ drop table member;
 desc member;
 
 select * from member;
+
+select *, timestampdiff(day,lastDate,now()) as deleteDiff from member order by idx desc limit 0,5;
+

@@ -23,7 +23,8 @@ public class MemberLoginOkCommand implements MemberInterface {
 		MemberDAO dao = new MemberDAO();
 		
 		MemberVO vo = dao.getMemberMidCheck(mid);
-		if(!vo.getMid().equals(mid)) {
+		
+		if(vo.getMid() == null || vo.getUserDel().equals("OK") || !vo.getMid().equals(mid)) {
 			request.setAttribute("msg", "아이디를 확인하세요");
 			request.setAttribute("url", "memberLogin.mem");
 			return;

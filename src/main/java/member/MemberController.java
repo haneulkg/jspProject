@@ -80,6 +80,11 @@ public class MemberController extends HttpServlet {
 			command.execute(request, response);
 		    viewPage = "/include/message.jsp";
 		}
+		else if(com.equals("/mAdminMemberList")) {
+			command =  new AMemberListCommand();
+			command.execute(request, response);
+			viewPage = "/WEB-INF/member/memberList.jsp";
+		}
 		else if(com.equals("/memberUpdateForm")) {
 			command = new MemberUpdateFormCommand();
 			command.execute(request, response);
@@ -99,6 +104,21 @@ public class MemberController extends HttpServlet {
 			command = new memberPwdChangeOkCommand();
 			command.execute(request, response);
 			viewPage = "/include/message.jsp";
+		}
+		else if(com.equals("/memberDeleteCheck")) {
+			command = new MemberDeleteCheckCommand();
+			command.execute(request, response);
+			return;
+		}
+		else if(com.equals("/memberDeleteOk")) {
+			command = new MemberDeleteOkCommand();
+			command.execute(request, response);
+			return;
+		}
+		else if(com.equals("/memberInfor")) {
+			command = new MemberInforCommand();
+			command.execute(request, response);
+			viewPage += "/mInfor.jsp";
 		}
 
 		request.getRequestDispatcher(viewPage).forward(request, response);
