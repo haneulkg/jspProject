@@ -7,14 +7,14 @@
 <head>
 	<meta charset="UTF-8">
 	<meta name="viewport" content="width=device-width, initial-scale=1">
-	<title>boardList.jsp</title>
+	<title>boardSearchList.jsp</title>
 	<jsp:include page="/include/bs4.jsp" />
 	<script>
 		'use strict';
 	
 		function pageSizeCheck() {
 			let pageSize = $("#pageSize").val();
-			location.href="boardList.bo?pageSize="+pageSize;
+			location.href="boardSearch.bo?pageSize="+pageSize+"&flag=search&search=${search}&searchString=${searchString}";
 		}
 	</script>
 	<style>
@@ -46,13 +46,11 @@
 	<div class="container">
 		<table class="table table-borderless m-0 p-0">
 			<tr>
-		   		<td colspan="2"><h2 class="text-center">게시판 리스트</h2></td>
-			</tr>
-			<tr>
-				<c:if test="${sLevel != 1}">
-					<td><a href="boardInput.bo" class="btn btn-success btn-sm">글쓰기</a></td>
-				</c:if>
-				<td class="text-right">
+		   		<td colspan="2">
+		   			<h2 class="text-center">게시판 검색결과 리스트</h2>
+		   			>> <font color="orange"><b>${searchTitle}</b></font>(으)로 <font color="orange"><b>${searchString}</b></font>(을)를 검색한 결과 <font color="orange"><b>${searchCount}</b></font>건이 검색되었습니다.
+		   		</td>
+		   		<td class="text-right">
 					<select name="pageSize" id="pageSize" onchange="pageSizeCheck()">
 						<option ${pageSize==3? "selected" : ""}>3</option>
 						<option ${pageSize==5? "selected" : ""}>5</option>
@@ -60,6 +58,11 @@
 						<option ${pageSize==15? "selected" : ""}>15</option>
 						<option ${pageSize==20? "selected" : ""}>20</option>
 					</select>건
+				</td>
+			</tr>
+			<tr>
+				<td>
+					<a href="boardList.bo?pag=${pag}&pageSize=${pageSize}" class="btn btn-warning btn-sm">돌아가기</a>
 				</td>
 			</tr>
 		</table>
@@ -73,30 +76,26 @@
 			</tr>
 			<c:forEach var="vo" items="${vos}" varStatus="st">
 				<tr>
-					<td>${curScrStartNo}</td>
+					<td>${searchCount}</td>
 					<td class="text-left">
-						<a href="boardContent.bo?idx=${vo.idx}&pag=${pag}&pageSize=${pageSize}">${vo.title}</a>
+						<a href="boardContent.bo?idx=${vo.idx}&pag=${pag}&pageSize=${pageSize}&flag=search&search=${search}&searchString=${searchString}">${vo.title}</a>
 						<c:if test="${vo.hour_diff <= 24}"><img src="${ctp}/images/new.gif"/></c:if>
 					</td>
 					<td>${vo.nickName}</td>
 					<td>
-						<c:if test="${vo.hour_diff <= 24}">
-							<c:if test="${vo.day_diff < 1}">
-								${fn:substring(vo.wDate,11,16)}
-							</c:if>
-							<c:if test="${vo.day_diff >= 1}">
-								${fn:substring(vo.wDate,0,10)}
-							</c:if>
+						<c:if test="${vo.hour_diff > 24}">
+							${fn:substring(vo.wDate,0,11)}
 						</c:if>
-						<c:if test="${vo.hour_diff > 24}">${fn:substring(vo.wDate,0,10)}</c:if>
+						<c:if test="${vo.hour_diff <= 24}">${fn:substring(vo.wDate,11,16)}</c:if>
 					</td>
 					<td>${vo.readNum}(${vo.good })</td>
 				</tr>
 				<tr><td colspan="5" class="m-0 p-0"></td></tr>
-			 	<c:set var="curScrStartNo" value="${curScrStartNo-1}"></c:set>
+			 	<c:set var="searchCount" value="${searchCount-1}"/>
 			</c:forEach>			
 		</table>
 	</div>
+	<p><br/></p>
 		<!-- 블록페이지 시작(1블록의 크기를 3개(3Page)로 한다, 한페이지 기본은 5개  -->
 		<div class="text-center">
 		
@@ -104,7 +103,7 @@
 			
 				<li class="page-item">
 					<c:if test = "${curBlock > 0}">
-						<a class="page-link" href="boardList.bo?pag=${(curBlock-1)*blockSize+1}&pageSize=${pageSize}"> << </a>
+						<a class="page-link" href="boardSearch.bo?pag=${(curBlock-1)*blockSize+1}&pageSize=${pageSize}&flag=search&search=${search}&searchString=${searchString}"> << </a>
 					</c:if>
 				</li>
 	
@@ -115,13 +114,13 @@
 						
 							<c:if test="${i==pag}">
 								<li class="page-item active">
-									<a class="page-link" href = "boardList.bo?pag=${i}&pageSize=${pageSize}">${i}</a>
+									<a class="page-link" href = "boardSearch.bo?pag=${i}&pageSize=${pageSize}&flag=search&search=${search}&searchString=${searchString}">${i}</a>
 								</li>
 							</c:if>
 							
 							<c:if test="${i!=pag}">
 								<li class="page-item">
-									<a class="page-link" href = "boardList.bo?pag=${i}&pageSize=${pageSize}">${i}</a>
+									<a class="page-link" href = "boardSearch.bo?pag=${i}&pageSize=${pageSize}&flag=search&search=${search}&searchString=${searchString}">${i}</a>
 								</li>
 							</c:if>
 							
@@ -130,28 +129,11 @@
 				</c:forEach>
 				<c:if test = "${curBlock < lastBlock}">
 					<li class="page-item">
-						<a class="page-link" href="boardList.bo?pag=${(curBlock+1)*blockSize+1}&pageSize=${pageSize}"> >> </a>
+						<a class="page-link" href="boardSearch.bo?pag=${(curBlock+1)*blockSize+1}&pageSize=${pageSize}&flag=search&search=${search}&searchString=${searchString}"> >> </a>
 					</li>
 				</c:if>
 			</ul>
-		</div>
-		<p><br/></p>
-		<!-- 검색기 처리하기 -->
-		<div class="container text-center">
-			<form name="searchForm" id="searchForm" method="post" action="boardSearch.bo">
-				<b>검색 : </b>
-				<select name="search" id="search">
-					<option value="title" selected>글제목</option>
-					<option value="nickName">글쓴이</option>
-					<option value="content">글내용</option>
-				</select>
-				<input type="text" name="searchString" id="searchString"/>
-				<input type="submit" value="검색" class="btn btn-secondary btn-sm"/>
-				<input type="hidden" name="pag" value="${pag}"/>
-				<input type="hidden" name="pageSize" value="${pageSize}"/>
- 			</form>
-		</div>			
-	<p><br/></p>
+		</div>	
 <jsp:include page="/include/footer.jsp"/>
 </body>
 </html>

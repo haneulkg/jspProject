@@ -19,3 +19,49 @@ create table board (
 desc board;
 
 insert into board values (default,'admin','관리맨','게시판 서비스를 시작합니다.','admin1234@naver.com','','게시할 내용들을 입력해주세요.',default,'192.168.50.54',default,default,default);
+
+select * from board;
+
+select * from board order by idx desc limit 0, 10;
+
+select *,datediff(wDate, now()) from board order by idx desc limit 0, 10;
+
+/* new.gif를 24시간동안만 보여주기 위한 처리하기 */
+select *,timestampdiff(hour, wDate, now()) from board order by idx desc limit 0, 10;
+
+/* 이전글|다음글 꺼내오기 */
+select * from board where idx = 8; -- 현재글
+select * from board where idx < 8 order by idx desc limit 1; -- 이전글
+select * from board where idx > 8 order by idx limit 1; -- 다음글
+
+/* 날짜 함수 연습 */
+select now();
+/* date_add() - datetime형식비교 */
+select now() as 오늘날짜, date_add(now(), interval 1 day);   -- 하루 후
+select now() as 오늘날짜, date_add(now(), interval -1 day);  -- 하루 전
+select now() as 오늘날짜, date_add(now(), interval 10 hour); -- 10시간 후
+select now() as 오늘날짜, date_add(now(), interval -10 hour) as preHour; -- 10시간 후
+
+/* date_sub() - datetime형식비교 */
+select now() as 오늘날짜, date_sub(now(), interval 1 day);   -- 하루 전
+select now() as 오늘날짜, date_sub(now(), interval -1 day);  -- 하루 후
+
+/* board테이블에 적용 */
+-- 게시글 중 하루전에 올라온 글만 보여주기
+select wDate, date_sub(now(), interval 1 day) from board;
+select substring(wDate,1,10), substring(date_sub(now(), interval 1 day),1,10) from board;
+select idx,nickName,wDate from board;
+select idx,nickName,wDate from board where substring(wDate,1,10) = substring(date_sub(now(), interval 1 day),1,10);
+
+/* 날짜차이 계산 : DATEDIFF(시작날짜,마지막날짜) - int형식비교 */
+select datediff('2023-11-14', now());
+select datediff(now(), wDate) from board;
+select datediff(wDate, now()) from board;
+select idx,nickName,wDate
+
+select timestampdiff(hour, now(), wDate) from board;
+select timestampdiff(day, now(), wDate) from board;
+
+/* 날짜형식(date_format(날짜형식, 포맷)) : 년도4자리(%Y)|월(%m)|일(%d), 시간(%H)|분(%i) */
+select wDate, date_format(wDate, '%Y-%m-%d') from board;
+select wDate, date_format(wDate, '%Y-%m-%d %H:%i') from board;
