@@ -77,6 +77,7 @@
 					<td class="text-left">
 						<a href="boardContent.bo?idx=${vo.idx}&pag=${pag}&pageSize=${pageSize}">${vo.title}</a>
 						<c:if test="${vo.hour_diff <= 24}"><img src="${ctp}/images/new.gif"/></c:if>
+						<c:if test="${vo.replyCnt != 0 }">(${vo.replyCnt})</c:if> 
 					</td>
 					<td>${vo.nickName}</td>
 					<td>

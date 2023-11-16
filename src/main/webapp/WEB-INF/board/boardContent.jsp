@@ -70,6 +70,74 @@
 			let ans = confirm("현재 게시글을 삭제하시겠습니까 ?");
 			if(ans) location.href="boardDelete.bo?idx=${vo.idx}";
 		}
+		
+		// 댓글 달기
+		function replyCheck() {
+			let content = $("#content").val();
+			if(content.trim()=="") {
+				alert("댓글을 입력하세요");
+				$("#content").focus();
+				return false;
+			}
+			let query = {
+				boardIdx : ${vo.idx},
+				mid		 : '${sMid}',
+				nickName : '${sNickName}',
+				hostIp   : '${pageContext.request.remoteAddr}',
+				content  : content
+			}
+			
+			$.ajax({
+				url  : "boardReplyInput.bo",
+				type : "post",
+				data : query,
+				success : function(res) {
+					if(res == "1") {
+						alert("댓글 작성 완료");
+						location.reload();
+					}
+					else {
+						alert("댓글 작성 실패");
+					}
+				},
+				error : function() {
+					alert("전송오류");
+				}
+			});
+		}
+		
+		// 댓글 삭제하기
+		function replyDelete(idx) {
+			let ans = confirm("선택한 댓글을 삭제하시겠습니까?");
+			if(!ans) return false;
+			
+			$.ajax({
+				url  : "boardReplyDelete.bo",
+				type : "post",
+				data : {idx : idx},
+				success : function(res) {
+					if(res == "1") {
+						alert("댓글이 삭제되었습니다");
+						location.reload();
+					}
+					else alert("댓글 삭제 실패");
+				},
+				error : function() {
+					alert("전송오류");
+				}
+			});
+		}
+		
+		function complaintInput() {
+			let url = "complaintInput.ad?part=board&partIdx=${vo.idx}&title=${vo.title}";
+			
+			if(${vo.mid == sMid}) {
+				alert("본인이 작성한 게시물은 신고할 수 없습니다");
+			}
+			else {
+				window.open(url,"nWin","width=400px,height=500px");
+			}
+		}
 	</script>
 </head>
 <body>
@@ -114,8 +182,10 @@
 				<th>글내용</th>
 				<td colspan="3" style="height:220px">${fn:replace(vo.content,newLine, "<br/>")}</td>
 			</tr>
+		</table>
+		<table class="table table-borderless m-0 p-0">
 			<tr>
-				<td colspan="4" class="text-center">
+				<td colspan="3" class="text-left">
 					<c:if test="${flag != 'search'}">
 						<input type="button" value="돌아가기" onclick="location.href='boardList.bo?pag=${pag}&pageSize=${pageSize}';" class="btn btn-success"/> 
 					</c:if>
@@ -123,12 +193,11 @@
 						<input type="button" value="돌아가기" onclick="location.href='boardSearch.bo?pag=${pag}&pageSize=${pageSize}&search=${search}&searchString=${searchString}';" class="btn btn-success"/> 
 					</c:if>
 					<c:if test="${sMid == vo.mid || sLevel == 0}">
-						
 						<input type="button" value="수정하기" onclick="location.href='boardUpdate.bo?idx=${vo.idx}&pag=${pag}&pageSize=${pageSize}';" class="btn btn-info"/>
-						
-						<input type="button" value="삭제하기" onclick="boardDelete()" class="btn btn-danger"/>
+						<input type="button" value="삭제하기" onclick="boardDelete()" class="btn btn-warning"/>
 					</c:if>
 				</td>
+				<td class="text-right"><input type="button" value="신고하기" onclick="complaintInput()" class="btn btn-danger"></a></td>
 			</tr>
 		</table>
 		<!-- 이전글|다음글 처리하기 -->
@@ -145,6 +214,51 @@
 			</tr>
 		</table>
 	</div>
+	<br/>
+	
+	<!-- 댓글 처리하기 -->
+	<div class="container">
+		<!-- 댓글 리스트 보여주기 -->
+		<table class="table table-hover">
+			<tr>
+				<th>작성자</th>
+				<th>댓글내용</th>
+				<th>댓글일자</th>
+				<th>접속IP</th>
+			</tr>
+			<c:forEach var="replyVo" items="${replyVos}" varStatus="st">
+				<tr class="text-center">
+					<td>${replyVo.nickName}
+						<c:if test="${replyVo.mid == sMid || sLevel == 0}">
+							(<a href="javascript:replyDelete(${replyVo.idx})">❌</a>)
+						</c:if>
+					</td>
+					<td class="text-left">${fn:replace(replyVo.content,newLine,"<br/>")}</td>
+					<td>${fn:substring(replyVo.wDate,0,10)}</td>
+					<td>${replyVo.hostIp}</td>
+				</tr>
+				<tr><td colspan="4" class="m-0 p-0"></td></tr>
+			</c:forEach>
+		</table>
+		
+		<!-- 댓글 입력창 -->
+		<form name="replyForm">
+			<table class="table table-center">
+				<tr>
+					<td style="width:85%" class="text-left">
+						글내용 :
+						<textarea rows="4" name="content" id="content" class="form-control"></textarea>
+					</td>
+					<td style="width:15%">
+						<br/>
+						<p style="font-size:14px">작성자 : ${sNickName}</p>
+						<p><input type="button" value="댓글달기" onclick="replyCheck()" class="btn btn-info btn-sm"/></p>
+					</td>
+				</tr>
+			</table>
+		</form>
+	</div>
+		
 	<p><br/></p>
 <jsp:include page="/include/footer.jsp"/>
 </body>

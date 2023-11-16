@@ -20,11 +20,60 @@ desc board;
 
 insert into board values (default,'admin','관리맨','게시판 서비스를 시작합니다.','admin1234@naver.com','','게시할 내용들을 입력해주세요.',default,'192.168.50.54',default,default,default);
 
+/* 게시판에 댓글 달기 */
+create table boardReply (
+	idx		 int not null auto_increment, -- 댓글의 고유번호
+	boardIdx int not null,				  -- 원본글(부모글)의 고유번호(왜래키로 설정)
+	mid 	 varchar(30) not null,		  -- 댓글 작성자의 아이디
+	nickName varchar(30) not null,		  -- 댓글 작성자의 닉네임
+	wDate 	 datetime default now(),	  -- 댓글 작성일
+	hostIp   varchar(50) not null,		  -- 댓글 올린 PC의 고유 IP
+	content  text not null,				  -- 댓글 내용
+	primary key(idx),
+ 	foreign key(boardIdx) references board(idx)
+ 	on update cascade					  -- 부모필드 수정할 경우:영향 받음
+ 	on delete restrict					  -- 부모필드 함부로 삭제 불가
+);
+desc boardReply;
+
+insert into boardReply values (default,12,'admin','관리맨',default,'210.100.20.25','댓글');
+insert into boardReply values (default,12,'kimm','김',default,'200.130.20.25','ㅎㅇ');
+insert into boardReply values (default,8,'leee','이',default,'200.150.20.25','안녕');
+select * from boardReply where boardIdx=8
+select * from boardReply;
+
+select b.*,br.nickName from board b, boardReply br where b.idx=br.boardIdx;
+select b.*,br.nickName,br.boardIdx from board b,(select * from boardReply where boardIdx=8) br where b.idx=8;
+
 select * from board;
 
 select * from board order by idx desc limit 0, 10;
 
 select *,datediff(wDate, now()) from board order by idx desc limit 0, 10;
+
+/* 댓글수 연습 */
+-- 게시판(board)리스트화면에서 글제목옆 해당글의 댓글(boardReply)수를 출력하기
+-- 전체 board테이블의 내용을 최신순으로 출력하기
+select * from board order by idx desc;
+
+-- board테이블 고유번호 18번에 해당하는 댓글테이블(boardReply)의 댓글수 구하기
+select count(*) from boardReply where boardIdx=8;
+
+-- 앞의 예에서 원본글 고유번호(8)와 함께, 총 댓글의 갯수는 replyCnt란 변수로 출력하시오
+select boardIdx,count(*) as replyCnt from boardReply where boardIdx=8;
+
+-- 앞의 예제에 이어서, 원본글을 쓴 닉네임도 함께 출력하기(닉네임은 부모테이블에서 가져와서 출력하기)
+select boardIdx,count(*) as replyCnt,(select nickName from board where idx=8) as nickName from boardReply where boardIdx=8;
+
+-- 앞의 내용을 부모관점(board)에서 처리하기
+-- 18번 게시글의 mid와 닉네임을 출력하기
+select mid,nickName from board where idx=8;
+
+-- 앞에 이어서 닉네임을 자식(댓글테이블)에서 가져와서 보여주기
+select mid,(select nickName from boardReply where boardIdx=8 limit 1) as nickName from board where idx=8;
+
+-- 부모글(원본글)에 해당하는 자식글(댓글)의 갯수를 부모글과 함께 출력하기
+select *,(select count(*) from boardReply where boardIdx=8) as replyCnt from board where idx=8;
 
 /* new.gif를 24시간동안만 보여주기 위한 처리하기 */
 select *,timestampdiff(hour, wDate, now()) from board order by idx desc limit 0, 10;

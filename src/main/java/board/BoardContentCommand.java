@@ -48,6 +48,11 @@ public class BoardContentCommand implements BoardInterface {
 		BoardVO nextVo = dao.getPreNextSearch(idx, "nextVo");
 		request.setAttribute("preVo", preVo);
 		request.setAttribute("nextVo", nextVo);
+		System.out.println(idx);
+		// 댓글 처리하기
+		ArrayList<BoardReplyVO> replyVos = dao.getBoardReply(idx); // 원본글의 idx
+		//System.out.println(replyVos);
+		request.setAttribute("replyVos", replyVos);
 	}
 
 }

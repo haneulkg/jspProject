@@ -8,6 +8,7 @@ import java.util.ArrayList;
 
 import javax.servlet.jsp.tagext.TryCatchFinally;
 
+import admin.ComplaintVO;
 import common.GetConn;
 
 public class BoardDAO {
@@ -45,7 +46,9 @@ public class BoardDAO {
 	public ArrayList<BoardVO> getBoardList(int startIndexNo, int pageSize) {
 		ArrayList<BoardVO> vos = new ArrayList<BoardVO>();
 		try {
-			sql = "select *, timestampdiff(hour, wDate, now()) as hour_diff, timestampdiff(day,wDate,now()) as day_diff from board order by idx desc limit ?, ?";
+			sql = "select *, timestampdiff(hour, wDate, now()) as hour_diff, timestampdiff(day,wDate,now()) as day_diff, "
+					+ "(select count(*) from boardReply where boardIdx=board.idx) as replyCnt"
+					+ " from board order by idx desc limit ?, ?";
 			pstmt = conn.prepareStatement(sql);
 			pstmt.setInt(1, startIndexNo);
 			pstmt.setInt(2, pageSize);
@@ -68,6 +71,7 @@ public class BoardDAO {
 				
 				vo.setHour_diff(rs.getInt("hour_diff"));
 				vo.setDay_diff(rs.getInt("day_diff"));
+				vo.setReplyCnt(rs.getInt("replyCnt"));
 				
 				vos.add(vo);
 			}
@@ -320,6 +324,118 @@ public class BoardDAO {
 			rsClose();
 		}
 		return totRecCnt;
+	}
+
+	// 댓글 읽어오기(원본글 idx에 해당하는 댓글을 읽어온다)
+	public ArrayList<BoardReplyVO> getBoardReply(int idx) {
+		ArrayList<BoardReplyVO> replyVos = new ArrayList<BoardReplyVO>();
+		try {
+			sql = "select * from boardReply where boardIdx=?";
+			pstmt = conn.prepareStatement(sql);
+			pstmt.setInt(1, idx);
+			rs = pstmt.executeQuery();
+			System.out.println("a");
+			while(rs.next()) {
+			BoardReplyVO replyVo = new BoardReplyVO();
+			replyVo.setIdx(rs.getInt("idx"));
+			replyVo.setBoardIdx(rs.getInt("boardIdx"));
+			replyVo.setMid(rs.getString("mid"));
+			replyVo.setNickName(rs.getString("nickName"));
+			replyVo.setwDate(rs.getString("wDate"));
+			replyVo.setHostIp(rs.getString("hostIp"));
+			replyVo.setContent(rs.getString("content"));
+			System.out.println(replyVo);
+			replyVos.add(replyVo);
+			}
+		} catch (SQLException e) {
+			System.out.println("SQL 구문 오류 : " + e.getMessage());
+		} finally {
+			rsClose();
+		}
+		return replyVos;
+	}
+
+	// 댓글 저장하기
+	public int setReplyInputOk(BoardReplyVO replyVo) {
+		int res = 0;
+		try {
+			sql = "insert into boardReply values (default,?,?,?,default,?,?)";
+			pstmt = conn.prepareStatement(sql);
+			pstmt.setInt(1, replyVo.getBoardIdx());
+			pstmt.setString(2, replyVo.getMid());
+			pstmt.setString(3, replyVo.getNickName());
+			pstmt.setString(4, replyVo.getHostIp());
+			pstmt.setString(5, replyVo.getContent());
+			res = pstmt.executeUpdate();
+		} catch (SQLException e) {
+			System.out.println("SQL 구문 오류 : " + e.getMessage());
+		} finally {
+			pstmtClose();
+		}
+		return res;
+	}
+	
+	// 댓글 삭제
+	public int setBoardReplyDeleteOk(int idx) {
+		int res = 0;
+		try {
+			sql = "delete from boardReply where idx=?";
+			pstmt = conn.prepareStatement(sql);
+			pstmt.setInt(1, idx);
+			res = pstmt.executeUpdate();
+		} catch (SQLException e) {
+			System.out.println("SQL 구문 오류 : " + e.getMessage());
+		} finally {
+			pstmtClose();
+		}
+		return res;
+	}
+
+	public int setComplaintInputOk(String part, int partIdx, String cpMid, String cpContent) {
+		int res = 0;
+		try {
+			sql = "insert into complaint values (default,?,?,?,?,default)";
+			pstmt = conn.prepareStatement(sql);
+			pstmt.setString(1, part);
+			pstmt.setInt(2, partIdx);
+			pstmt.setString(3, cpMid);
+			pstmt.setString(4, cpContent);
+			res = pstmt.executeUpdate();
+		} catch (SQLException e) {
+			System.out.println("SQL 구문 오류 : " + e.getMessage());
+		} finally {
+			pstmtClose();
+		}
+		return res;
+	}
+
+	public ArrayList<ComplaintVO> getComplaintList() {
+		ArrayList<ComplaintVO> vos = new ArrayList<ComplaintVO>(); 
+		String part = "";
+		try {
+			sql = "select * from complaint";
+			pstmt = conn.prepareStatement(sql);
+			rs = pstmt.executeQuery();
+			
+			while(rs.next()) {
+				ComplaintVO vo = new ComplaintVO();
+				vo.setIdx(rs.getInt("idx"));
+				if(rs.getString("part").equals("board")) vo.setPart("게시판");
+				else if(rs.getString("part").equals("guest")) vo.setPart("방명록");
+				else if(rs.getString("part").equals("pds")) vo.setPart("자료실");
+				vo.setPartIdx(rs.getInt("partIdx"));
+				vo.setCpMid(rs.getString("cpMid"));
+				vo.setCpContent(rs.getString("cpContent"));
+				vo.setCpDate(rs.getString("cpDate"));
+				
+				vos.add(vo);
+			}
+		} catch (SQLException e) {
+			System.out.println("SQL 구문 오류 : " + e.getMessage());
+		} finally {
+			rsClose();
+		}
+		return vos;
 	}	
 	
 }
