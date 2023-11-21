@@ -12,6 +12,7 @@ import javax.servlet.http.HttpSession;
 import admin.board.BoardComplaintInputCommand;
 import admin.member.AdminMemberInforCommand;
 import admin.member.MemberLevelChangeCommand;
+import admin.review.ReviewInputCommand;
 import member.MemberListCommand;
 
 @SuppressWarnings("serial")
@@ -35,6 +36,11 @@ public class AdminController extends HttpServlet {
 		}
 		else if(com.equals("/boardComplaintInput")) {
 			command = new BoardComplaintInputCommand();
+			command.execute(request, response);
+			return;
+		}
+		else if(com.equals("/reviewInput")) {
+			command = new ReviewInputCommand();
 			command.execute(request, response);
 			return;
 		}
@@ -72,6 +78,7 @@ public class AdminController extends HttpServlet {
 			command.execute(request, response);
 			viewPage += "/complaint/boardComplaintList.jsp";
 		}
+
 		
 		request.getRequestDispatcher(viewPage).forward(request, response);
 	}

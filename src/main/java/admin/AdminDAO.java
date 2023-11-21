@@ -7,6 +7,7 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 
 import admin.board.BoardComplaintVO;
+import admin.review.ReviewVO;
 import common.GetConn;
 
 public class AdminDAO {
@@ -50,8 +51,31 @@ public class AdminDAO {
 			res = pstmt.executeUpdate();
 		} catch (SQLException e) {
 			System.out.println("SQL 오류 : " + e.getMessage());
+		} finally {
+			pstmtClose();
 		}
 		return res;
 	}
 
+	public int setReviewInputOk(ReviewVO vo) {
+		int res = 0;
+		try {
+			sql = "insert into review values (default,?,?,?,?,?,default)";
+			pstmt = conn.prepareStatement(sql);
+			pstmt.setString(1, vo.getPart());
+			pstmt.setInt(2, vo.getPartIdx());
+			pstmt.setString(3, vo.getMid());
+			pstmt.setInt(4, vo.getStar());
+			pstmt.setString(5, vo.getContent());
+			res = pstmt.executeUpdate();
+		} catch (SQLException e) {
+			System.out.println("SQL 오류 : " + e.getMessage());
+		} finally {
+			pstmtClose();
+		}
+		return res;
+	}
+	
+	
+	
 }

@@ -39,7 +39,6 @@ public class PdsController extends HttpServlet{
 		else if(com.equals("/pdsInputOk")) {
 			command = new PdsInputOkCommand();
 			command.execute(request, response);
-			viewPage = "/include/message.jsp";
 		}
 		else if(com.equals("/pdsDeleteOk")) {
 			command = new PdsDeleteOkCommand();
@@ -48,6 +47,16 @@ public class PdsController extends HttpServlet{
 		}
 		else if(com.equals("/pdsDownNumCheck")) {
 			command = new PdsDownNumCheckCommand();
+			command.execute(request, response);
+			return;
+		}
+		else if(com.equals("/pdsContent")) {
+			command = new PdsContentCommand();
+			command.execute(request, response);
+			viewPage += "/pdsContent.jsp";
+		}
+		else if(com.equals("/pdsTotalDown")) {
+			command = new PdsTotalDownCommand();
 			command.execute(request, response);
 			return;
 		}

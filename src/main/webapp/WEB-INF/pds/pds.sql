@@ -21,3 +21,17 @@ create table pds (
 desc pds;
 
 select * from pds order by idx desc;
+
+/* 리뷰 테이블 */
+create table review (
+	idx 	  int not null auto_increment, 			-- 리뷰 고유번호
+	part 	  varchar(20) not null,					-- 분야(board:게시판|pds:자료실|guest:방명록)
+	partIdx	  int not null,							-- 해당 분야의 고유번호
+	mid 	  varchar(30) not null,					-- 리뷰 작성자
+	star	  int not null default 0,				-- 별점 부여 점수
+	content   text,									-- 리뷰 내용
+	rDate datetime default now(),					-- 리뷰 등록일자	
+	primary key(idx)
+);
+
+desc review;
