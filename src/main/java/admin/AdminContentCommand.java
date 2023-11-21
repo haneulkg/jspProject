@@ -10,17 +10,17 @@ import javax.servlet.http.HttpServletResponse;
 import member.MemberDAO;
 import member.MemberVO;
 
-public class MemberLevelSearchCommand implements AdminInterface {
+public class AdminContentCommand implements AdminInterface {
 
 	@Override
 	public void execute(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-//		int level = request.getParameter("level")==null ? 99 : Integer.parseInt(request.getParameter("level"));
-//		
-//		MemberDAO dao = new MemberDAO();
-//		ArrayList<MemberVO> vos = dao.getMemberLevelSearch(level);
-//		
-//		request.setAttribute("Vlevel", level);
-//		request.setAttribute("vos", vos);
+		MemberDAO mDao = new MemberDAO();
+		
+		ArrayList<MemberVO> mVos = mDao.getMemberList(0,999,1);
+		ArrayList<MemberVO> m99Vos = mDao.getMemberList(0,999,99);
+		
+		request.setAttribute("mCount", mVos.size());
+		request.setAttribute("m99Count", m99Vos.size());
 	}
 
 }

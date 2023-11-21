@@ -9,6 +9,9 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
+import admin.board.BoardComplaintInputCommand;
+import admin.member.AdminMemberInforCommand;
+import admin.member.MemberLevelChangeCommand;
 import member.MemberListCommand;
 
 @SuppressWarnings("serial")
@@ -23,20 +26,15 @@ public class AdminController extends HttpServlet {
 		com = com.substring(com.lastIndexOf("/"),com.lastIndexOf("."));
 		
 		HttpSession session = request.getSession();
-		int level = session.getAttribute("sLevel")==null ? 99 : (int)session.getAttribute("sLevel");
+		int level = session.getAttribute("sLevel")==null ? 99 : (int) session.getAttribute("sLevel");
 		
 		if(com.equals("/main")) {
 			command = new MainCommand();
 			command.execute(request, response);
 			viewPage = "/WEB-INF/main/main.jsp";
 		}
-		else if(com.equals("/complaintInput")) {
-			command = new ComplaintInputCommand();
-			command.execute(request, response);
-			viewPage += "/complaint/complaintInput.jsp";
-		}
-		else if(com.equals("/complainInputOk")) {
-			command = new ComplainInputOkCommand();
+		else if(com.equals("/boardComplaintInput")) {
+			command = new BoardComplaintInputCommand();
 			command.execute(request, response);
 			return;
 		}
@@ -50,7 +48,7 @@ public class AdminController extends HttpServlet {
 			viewPage += "/adminLeft.jsp";
 		}
 		else if(com.equals("/adminContent")) {
-			command = new adminNewMemberCntCommand();
+			command = new AdminContentCommand();
 			command.execute(request, response);
 			viewPage += "/adminContent.jsp";
 		}
@@ -64,21 +62,17 @@ public class AdminController extends HttpServlet {
 			command.execute(request, response);
 			return;
 		}
-		else if(com.equals("/memberLevelSearch")) {
-			command = new MemberLevelSearchCommand();
-			command.execute(request, response);
-			viewPage += "/member/adminMemberList.jsp";
-		}
 		else if(com.equals("/adminMemberInfor")) {
 			command = new AdminMemberInforCommand();
 			command.execute(request, response);
 			viewPage += "/member/adminMemberInfor.jsp";
 		}
-		else if(com.equals("/adminComplatintList")) {
-			command = new AdminComplatintListCommand();
+		else if(com.equals("/boardComplaintList")) {
+			command = new BoardComplaintInputCommand();
 			command.execute(request, response);
-			viewPage += "/complaint/adminComplatintList.jsp";
+			viewPage += "/complaint/boardComplaintList.jsp";
 		}
+		
 		request.getRequestDispatcher(viewPage).forward(request, response);
 	}
 }

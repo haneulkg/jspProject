@@ -44,7 +44,7 @@ public class MemberDAO {
 	public MemberVO getMemberMidCheck(String mid) {
 		vo = new MemberVO();
 		try {
-			sql = "select * from member where mid=?";
+			sql = "select * from member where mid = ?";
 			pstmt = conn.prepareStatement(sql);
 			pstmt.setString(1, mid);
 			rs = pstmt.executeQuery();
@@ -227,7 +227,9 @@ public class MemberDAO {
 	public int setMemberUpdateOk(MemberVO vo) {
 		int res = 0;
 		try {
-			sql = "update member set nickName=?,name=?,gender=?,birthday=?,tel=?,address=?,email=?,homePage=?,job=?,hobby=?,photo=?,content=?,userInfor=? where mid=?";
+			sql = "update member set nickName=?, name=?, gender=?, birthday=?,"
+					+ "tel=?, address=?, email=?, homePage=?, job=?, hobby=?,"
+					+ "photo=?, content=?, userInfor=? where mid=?";
 			pstmt = conn.prepareStatement(sql);
 			pstmt.setString(1, vo.getNickName());
 			pstmt.setString(2, vo.getName());
@@ -251,136 +253,24 @@ public class MemberDAO {
 		}
 		return res;
 	}
-	
-	// 전체 회원 리스트
-	public ArrayList<MemberVO> getMemberList() {
+
+	// 회원 전체 리스트
+	public ArrayList<MemberVO> getMemberList(int startIndexNo, int pageSize, int level) {
 		ArrayList<MemberVO> vos = new ArrayList<MemberVO>();
 		try {
-			sql = "select * from member order by idx desc";
-			pstmt = conn.prepareStatement(sql);
-			rs = pstmt.executeQuery();
-			
-			while(rs.next()) {
-				vo = new MemberVO();
-				vo.setIdx(rs.getInt("idx"));
-				vo.setMid(rs.getString("mid"));
-				vo.setPwd(rs.getString("pwd"));
-				vo.setNickName(rs.getString("nickName"));
-				vo.setName(rs.getString("name"));
-				vo.setGender(rs.getString("gender"));
-				vo.setBirthday(rs.getString("birthday"));
-				vo.setTel(rs.getString("tel"));
-				vo.setAddress(rs.getString("address"));
-				vo.setEmail(rs.getString("email"));
-				vo.setHomePage(rs.getString("homePage"));
-				vo.setJob(rs.getString("job"));
-				vo.setHobby(rs.getString("hobby"));
-				vo.setPhoto(rs.getString("photo"));
-				vo.setContent(rs.getString("content"));
-				vo.setUserInfor(rs.getString("userInfor"));
-				vo.setUserDel(rs.getString("userDel"));
-				vo.setPoint(rs.getInt("point"));
-				vo.setLevel(rs.getInt("level"));
-				vo.setVisitCnt(rs.getInt("visitCnt"));
-				vo.setStartDate(rs.getString("startDate"));
-				vo.setLastDate(rs.getString("lastDate"));
-				vo.setTodayCnt(rs.getInt("todayCnt"));
-				
-				vos.add(vo);
+			if(level != 99 && level > 4) {
+				sql = "select *, timestampdiff(day, lastDate, now()) as deleteDiff from member order by idx desc limit ?,?";
+				pstmt = conn.prepareStatement(sql);
+				pstmt.setInt(1, startIndexNo);
+				pstmt.setInt(2, pageSize);
 			}
-		} catch (SQLException e) {
-			System.out.println("sql구문 오류 : " + e.getMessage());
-		} finally {
-			rsClose();
-		}
-		return vos;
-	}
-
-	// 회원 등급변경
-	public int setMemberLevelChange(int idx, int level) {
-		int res = 0;
-		try {
-			sql = "update member set level=? where idx=?";
-			pstmt = conn.prepareStatement(sql);
-			pstmt.setInt(1, level);
-			pstmt.setInt(2, idx);
-			res = pstmt.executeUpdate();
-		} catch (SQLException e) {
-			System.out.println("sql구문 오류 : " + e.getMessage());
-		} finally {
-			pstmtClose();
-		}
-		return res;
-	}
-
-	public ArrayList<MemberVO> getMemberLevelSearch(int level) {
-		ArrayList<MemberVO> vos = new ArrayList<MemberVO>();
-		try {
-			sql = "select * from member where level=?";
-			pstmt = conn.prepareStatement(sql);
-			pstmt.setInt(1, level);
-			rs = pstmt.executeQuery();
-			
-			while(rs.next()) {
-				vo = new MemberVO();
-				vo.setIdx(rs.getInt("idx"));
-				vo.setMid(rs.getString("mid"));
-				vo.setPwd(rs.getString("pwd"));
-				vo.setNickName(rs.getString("nickName"));
-				vo.setName(rs.getString("name"));
-				vo.setGender(rs.getString("gender"));
-				vo.setBirthday(rs.getString("birthday"));
-				vo.setTel(rs.getString("tel"));
-				vo.setAddress(rs.getString("address"));
-				vo.setEmail(rs.getString("email"));
-				vo.setHomePage(rs.getString("homePage"));
-				vo.setJob(rs.getString("job"));
-				vo.setHobby(rs.getString("hobby"));
-				vo.setPhoto(rs.getString("photo"));
-				vo.setContent(rs.getString("content"));
-				vo.setUserInfor(rs.getString("userInfor"));
-				vo.setUserDel(rs.getString("userDel"));
-				vo.setPoint(rs.getInt("point"));
-				vo.setLevel(rs.getInt("level"));
-				vo.setVisitCnt(rs.getInt("visitCnt"));
-				vo.setStartDate(rs.getString("startDate"));
-				vo.setLastDate(rs.getString("lastDate"));
-				vo.setTodayCnt(rs.getInt("todayCnt"));
-				
-				vos.add(vo);
+			else {
+				sql = "select *, timestampdiff(day, lastDate, now()) as deleteDiff from member where level = ? order by idx desc limit ?,?";
+				pstmt = conn.prepareStatement(sql);
+				pstmt.setInt(1, level);
+				pstmt.setInt(2, startIndexNo);
+				pstmt.setInt(3, pageSize);
 			}
-		} catch (SQLException e) {
-			System.out.println("sql구문 오류 : " + e.getMessage());
-		} finally {
-			rsClose();
-		}
-		return vos;
-	}
-
-	public int getTotRecCntAd() {
-		int totRecCnt = 0;
-		try {
-			sql = "select count(*) as cnt from member";
-			pstmt = conn.prepareStatement(sql);
-			rs = pstmt.executeQuery();
-			rs.next();
-			totRecCnt = rs.getInt("cnt");
-		} catch (SQLException e) {
-			System.out.println("SQL 구문 오류 - " + e.getMessage());
-		} finally {
-			rsClose();
-		}
-		return totRecCnt;
-	}
-
-	public ArrayList<MemberVO> getGuestList2(int startIndexNo, int pageSize) {
-		ArrayList<MemberVO> vos = new ArrayList<MemberVO>();
-		
-		try {
-			sql = "select *, timestampdiff(day,lastDate,now()) as deleteDiff from member order by idx desc limit ?,?";
-			pstmt = conn.prepareStatement(sql);
-			pstmt.setInt(1, startIndexNo);
-			pstmt.setInt(2, pageSize);
 			rs = pstmt.executeQuery();
 			
 			while(rs.next()) {
@@ -412,58 +302,99 @@ public class MemberDAO {
 				vo.setDeleteDiff(rs.getInt("deleteDiff"));
 				
 				vos.add(vo);
-				
 			}
 		} catch (SQLException e) {
-			System.out.println("SQL 오류 " +e.getMessage());
+			System.out.println("sql구문 오류 : " + e.getMessage());
 		} finally {
 			rsClose();
 		}
-		
 		return vos;
 	}
 
-	// 회원 탈퇴신청(userDel 필드의 값: NO -> OK로 변경하기)
+	// 회원 등급변경
+	public int setMemberLevelChange(int idx, int level) {
+		int res = 0;
+		try {
+			// sql = "update member set level = ? where idx = ?";
+			sql = "update member set level = ?, userDel = 'NO' where idx = ?";	// DB설계에서 userDel필드를 추가해 두었기에 level=99가 들어올때는 관리자가 변경한 level로 지정하고 탈퇴처리를 해제한다.(다시 설계시는 userDel필드는 필요없다. level=99를 탈퇴신청회원으로 두었기에..)
+			pstmt = conn.prepareStatement(sql);
+			pstmt.setInt(1, level);
+			pstmt.setInt(2, idx);
+			res = pstmt.executeUpdate();
+		} catch (SQLException e) {
+			System.out.println("sql구문 오류 : " + e.getMessage());
+		} finally {
+			pstmtClose();
+		}
+		return res;
+	}
+
+	// 전체(각 레벨별) 회원 인원수 구하기
+	public int getTotRecCnt(int level) {
+		int totRecCnt = 0;
+		try {
+			if(level != 99 && level > 4) {
+				sql = "select count(*) as cnt from member";
+				pstmt = conn.prepareStatement(sql);
+			}
+			else {
+				sql = "select count(*) as cnt from member where level = ?";
+				pstmt = conn.prepareStatement(sql);
+				pstmt.setInt(1, level);
+			}
+			rs = pstmt.executeQuery();
+			rs.next();
+			totRecCnt = rs.getInt("cnt");
+		} catch (SQLException e) {
+			System.out.println("sql구문 오류 : " + e.getMessage());
+		} finally {
+			rsClose();
+		}
+		return totRecCnt;
+	}
+
+	// 회원 탈퇴 신청(userDel필드의 값을 NO -> Ok 로 변경처리, level을 99번으로 변경, 즉 userDel필드는 필요없어짐. 다음설계시는 뺄것..)
 	public int setMemberDeleteCheck(String mid) {
 		int res = 0;
 		try {
-			sql = "update member set userDel='OK' where mid=?";
+			sql = "update member set userDel = 'OK', level = 99 where mid = ?";
 			pstmt = conn.prepareStatement(sql);
 			pstmt.setString(1, mid);
 			res = pstmt.executeUpdate();
 		} catch (SQLException e) {
-			System.out.println("SQL 오류 " +e.getMessage());
+			System.out.println("sql구문 오류 : " + e.getMessage());
 		} finally {
 			pstmtClose();
 		}
-		
 		return res;
 	}
 
-	// 탈퇴한 회원정보 삭제하기
-	public void setMemberDeleteOk(int idx) {
+	// 회원 정보 삭제
+	public int setMemberDeleteOk(int idx) {
+		int res = 0;
 		try {
-			sql = "delete from member where idx=?";
+			sql = "delete from member where idx = ?";
 			pstmt = conn.prepareStatement(sql);
 			pstmt.setInt(1, idx);
-			pstmt.executeUpdate();
+			res = pstmt.executeUpdate();
 		} catch (SQLException e) {
-			System.out.println("SQL 오류 " +e.getMessage());
+			System.out.println("sql구문 오류 : " + e.getMessage());
 		} finally {
 			pstmtClose();
 		}
+		return res;
 	}
 
-	public MemberVO getMemberInfor(int idx) {
-		MemberVO vo = new MemberVO();
+	// 회원 idx로 검색처리
+	public MemberVO getMemberIdxSearch(int idx) {
+		vo = new MemberVO();
 		try {
-			sql = "select * from member where idx=?";
+			sql = "select * from member where idx = ?";
 			pstmt = conn.prepareStatement(sql);
 			pstmt.setInt(1, idx);
-			rs=pstmt.executeQuery();
+			rs = pstmt.executeQuery();
 			
 			if(rs.next()) {
-				vo = new MemberVO();
 				vo.setIdx(rs.getInt("idx"));
 				vo.setMid(rs.getString("mid"));
 				vo.setPwd(rs.getString("pwd"));
@@ -489,11 +420,47 @@ public class MemberDAO {
 				vo.setTodayCnt(rs.getInt("todayCnt"));
 			}
 		} catch (SQLException e) {
-			System.out.println("SQL 오류 " +e.getMessage());
+			System.out.println("sql오류 : " + e.getMessage());
 		} finally {
-			pstmtClose();
+			rsClose();
 		}
 		return vo;
 	}
+
+	// level에 따른 검색처리
+	public ArrayList<MemberVO> getMemberLevelSearch(int level) {
+		ArrayList<MemberVO> vos = new ArrayList<MemberVO>();
+		try {
+			sql = "select * from member where level=?";
+			pstmt = conn.prepareStatement(sql);
+			pstmt.setInt(1, level);
+			rs = pstmt.executeQuery();
+		} catch (SQLException e) {
+			System.out.println("sql오류 : " + e.getMessage());
+		} finally {
+			rsClose();
+		}
+		return vos;
+	}
+
+//	public ArrayList<MemberVO> getMemberLevelSearch(int level) {
+//		// TODO Auto-generated method stub
+//		return null;
+//	}
+//
+//	public int getTotRecCntAd() {
+//		// TODO Auto-generated method stub
+//		return 0;
+//	}
+//
+//	public ArrayList<MemberVO> getGuestList2(int startIndexNo, int pageSize) {
+//		// TODO Auto-generated method stub
+//		return null;
+//	}
+//
+//	public MemberVO getMemberInfor(int idx) {
+//		// TODO Auto-generated method stub
+//		return null;
+//	}
 	
 }

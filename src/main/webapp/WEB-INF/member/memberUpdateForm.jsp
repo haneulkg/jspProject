@@ -13,17 +13,14 @@
   <script src="${ctp}/js/woo.js"></script>
   <script>
     'use strict';
-    // 아이디와 닉네임 중복버튼을 클릭했는지의 여부를 확인하기위한 변수(버튼 클릭후에는 내용 수정처리 못하도록 처리)
+    // 닉네임 중복버튼을 클릭했는지의 여부를 확인하기위한 변수(버튼 클릭후에는 내용 수정처리 못하도록 처리)
     let nickCheckSw = 0;
     
     function fCheck() {
-    	// 유효성 검사.....
-    	// 아이디,닉네임,성명,이메일,홈페이지,전화번호,비밀번호 등등....
-    	
-        let regNickName = /^[가-힣]+$/;
-        let regName = /^[가-힣a-zA-Z]+$/;
-        let regEmail =/^([\w-]+(?:\.[\w-]+)*)@((?:[\w-]+\.)*\w[\w-]{0,66})\.([a-z]{2,6}(?:\.[a-z]{2})?)$/;
-        let regURL = /^(https?:\/\/)?([a-z\d\.-]+)\.([a-z\.]{2,6})([\/\w\.-]*)*\/?$/;
+      let regNickName = /^[가-힣]+$/;
+      let regName = /^[가-힣a-zA-Z]+$/;
+      let regEmail =/^([\w-]+(?:\.[\w-]+)*)@((?:[\w-]+\.)*\w[\w-]{0,66})\.([a-z]{2,6}(?:\.[a-z]{2})?)$/;
+      let regURL = /^(https?:\/\/)?([a-z\d\.-]+)\.([a-z\.]{2,6})([\/\w\.-]*)*\/?$/;
     	let regTel = /\d{2,3}-\d{3,4}-\d{4}$/g;
     	
     	let nickName = myform.nickName.value;
@@ -39,7 +36,7 @@
     	
     	let submitFlag = 0;
     	
-      if(!regNickName.test(nickName)) {
+    	if(!regNickName.test(nickName)) {
         alert("닉네임은 한글만 사용가능합니다.");
         myform.nickName.focus();
         return false;
@@ -89,6 +86,27 @@
     	let extraAddress = myform.extraAddress.value + " ";
   		myform.address.value = postcode + "/" + roadAddress + "/" + detailAddress + "/" + extraAddress + "/";
     	
+  		// 전송전에 파일에 관한 사항들을 체크한다.
+  		let fName = document.getElementById("file").value;
+    	 
+    	if(fName.trim() != "") {
+	    	let ext = fName.substring(fName.lastIndexOf(".")+1).toLowerCase();
+	    	let maxSize = 1024 * 1024 * 5;
+	    	let fileSize = document.getElementById("file").files[0].size;
+	    	
+	    	if(ext != 'jpg' && ext != 'gif' && ext != 'png' && ext != 'zip' && ext != 'hwp' && ext != 'ppt' && ext != 'pptx' && ext != 'xlsx') {
+	    		alert("업로드 가능한 파일은 'jgp/gif/png/zip/hwp/ppt/pptx/xlsx' 만 가능합니다.");
+	    	}
+	    	else if(fileSize > maxSize) {
+	    		alert("업로드할 파일의 최대용량은 5MByte입니다.");
+	    	}
+	    	submitFlag == 1;
+    	}
+    	//else {
+    	//	document.getElementById("photo").value = '${vo.photo}';
+    	//}
+  		
+  		
     	// 전송전에 모든 체크가 끝나면 submitFlag가 1로 되게된다. 이때 값들을 서버로 전송처리한다.
     	if(submitFlag == 1) {
     		if(nickCheckSw == 0) {
@@ -113,11 +131,11 @@
     	let nickName = myform.nickName.value;
     	
     	if(nickName == '${sNickName}') {
-    		alert("현재 사용하는 닉네임과 동일합니다");
+    		alert("현재 닉네임과 동일합니다.");
     		nickCheckSw = 1;
     		myform.nickName.readOnly = true;
     		return false;
-    	} 
+    	}
     	
     	let url = "${ctp}/memberNickCheck.mem?nickName="+nickName;
     	
@@ -132,18 +150,29 @@
     	}
     }
     
+    // 선택된 그림 미리보기
+    function imgCheck(e) {
+    	if(e.files && e.files[0]) {
+    		let reader = new FileReader();
+    		reader.onload = function(e) {
+    			document.getElementById("photoDemo").src = e.target.result;
+    		}
+    		reader.readAsDataURL(e.files[0]);
+    	}
+    	else {
+    		document.getElementById("photoDemo").src = "";
+    	}
+    }
   </script>
 </head>
 <body>
 <jsp:include page="/include/header.jsp" />
 <p><br/></p>
 <div class="container">
-  <form name="myform" method="post" action="${ctp}/memberUpdateOk.mem" class="was-validated">
-    <h2>회원 정보수정</h2>
+  <form name="myform" method="post" action="${ctp}/memberUpdateOk.mem" class="was-validated" enctype="multipart/form-data">
+    <h2>회 원 정 보 수 정</h2>
     <br/>
-    <div class="form-group">
-      <div>아이디 : ${sMid}</div>
-    </div>
+    <div>아이디 : ${sMid}</div>
     <div class="form-group">
       <label for="nickName">닉네임 : &nbsp; &nbsp;<input type="button" id="nickNameBtn" value="닉네임 중복체크" class="btn btn-secondary btn-sm" onclick="nickCheck()"/></label>
       <input type="text" value="${vo.nickName}" class="form-control" id="nickName" placeholder="별명을 입력하세요." name="nickName" required />
@@ -155,7 +184,7 @@
     <div class="form-group">
       <label for="email1">Email address:</label>
         <div class="input-group mb-3">
-        	<c:set var="email" value="${fn:split(vo.email,'@')}"/>
+          <c:set var="email" value="${fn:split(vo.email,'@')}" />
           <input type="text" value="${email[0]}" class="form-control" placeholder="Email을 입력하세요." id="email1" name="email1" required />
           <div class="input-group-append">
             <select name="email2" class="custom-select">
@@ -192,7 +221,7 @@
           <span class="input-group-text">전화번호 :</span> &nbsp;&nbsp;
             <select name="tel1" class="custom-select">
               <option value="010" ${tel1 == '010' ? 'selected' : ''}>010</option>
-              <option value="02" ${tel1 == '02' ? 'selected' : ''}>서울</option>
+              <option value="02"  ${tel1 == '02' ? 'selected' : ''}>서울</option>
               <option value="031" ${tel1 == '031' ? 'selected' : ''}>경기</option>
               <option value="032" ${tel1 == '032' ? 'selected' : ''}>인천</option>
               <option value="041" ${tel1 == '041' ? 'selected' : ''}>충남</option>
@@ -244,13 +273,11 @@
       </select>
     </div>
     <div class="form-group">
-      <div class="form-check-inline">
-      	취미 : 
-      	<c:set var="varHobbys" value="${fn:split('등산/낚시/수영/독서/영화감상/바둑/축구/기타','/')}"></c:set>
-		<c:forEach var="tempHobby" items="${varHobbys}" varStatus="st">
-	        <input type="checkbox" name="hobby" value="${tempHobby}" <c:if test="${fn:contains(hobby,varHobbys[st.index])}">checked</c:if> />${tempHobby} &nbsp;			
-		</c:forEach>		      	
-	  </div>
+      취미 :
+      <c:set var="varHobbys" value="${fn:split('등산/낚시/수영/독서/영화감상/바둑/축구/기타','/')}"/>
+      <c:forEach var="tempHobby" items="${varHobbys}" varStatus="st">
+        <input type="checkbox" name="hobby" value="${tempHobby}" <c:if test="${fn:contains(hobby,varHobbys[st.index])}">checked</c:if> />${tempHobby} &nbsp;
+      </c:forEach>
     </div>
     <div class="form-group">
       <label for="content">자기소개</label>
@@ -271,7 +298,9 @@
     </div>
     <div  class="form-group">
       회원 사진(파일용량:2MByte이내) :
-      <input type="file" name="fName" id="file" class="form-control-file border"/>
+      <img src="${ctp}/images/member/${vo.photo}" width="100px"/>
+      <input type="file" name="fName" id="file" onchange="imgCheck(this)" class="form-control-file border mb-1"/>
+      <div><img id="photoDemo" width="100px"/></div>
     </div>
     <button type="button" class="btn btn-secondary" onclick="fCheck()">회원정보수정</button> &nbsp;
     <button type="reset" class="btn btn-secondary">다시작성</button> &nbsp;
@@ -280,7 +309,8 @@
     <input type="hidden" name="email" />
     <input type="hidden" name="tel" />
     <input type="hidden" name="address" />
-    <input type="hidden" name="mid" value="${sMid}"/>
+    <input type="hidden" name="mid" value="${sMid}" />
+    <input type="hidden" name="photo" id="photo" value="${vo.photo}" />
   </form>
 </div>
 <p><br/></p>

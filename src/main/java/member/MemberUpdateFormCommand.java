@@ -16,7 +16,7 @@ public class MemberUpdateFormCommand implements MemberInterface {
 		
 		MemberVO vo = dao.getMemberMidCheck(mid);
 		
-		// 전화번호 분리 (-)
+		// 전화번호 분리(-)
 		String[] tel = vo.getTel().split("-");
 		if(tel[1].equals(" ")) tel[1] = "";
 		if(tel[2].equals(" ")) tel[2] = "";
@@ -24,7 +24,7 @@ public class MemberUpdateFormCommand implements MemberInterface {
 		request.setAttribute("tel2", tel[1]);
 		request.setAttribute("tel3", tel[2]);
 		
-		// 주소 분리(/)
+		// 주소분리(/)
 		String[] address = vo.getAddress().split("/");
 		if(address[0].equals(" ")) address[0] = "";
 		if(address[1].equals(" ")) address[1] = "";
@@ -35,7 +35,7 @@ public class MemberUpdateFormCommand implements MemberInterface {
 		request.setAttribute("detailAddress", address[2]);
 		request.setAttribute("extraAddress", address[3]);
 		
-		// 취미는 통째로 넘겨서 JSTL에서 처리하기로 한다
+		// 취미는 통째로 넘겨서 JSTL에서 처리하기로 한다.
 		request.setAttribute("hobby", vo.getHobby());
 		
 		request.setAttribute("vo", vo);

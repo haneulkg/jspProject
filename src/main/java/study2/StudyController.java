@@ -13,7 +13,7 @@ import study2.pdstest.FileDownloadCommand;
 import study2.pdstest.FileUpload2OkCommand;
 import study2.pdstest.FileUpload3OkCommand;
 import study2.pdstest.FileUpload4OkCommand;
-import study2.pdstest.JavaFileDownloadCommand3;
+import study2.pdstest.JavaFileDownloadCommand;
 import study2.pdstest.TempFileDeleteCommand;
 
 @SuppressWarnings("serial")
@@ -81,7 +81,7 @@ public class StudyController extends HttpServlet{
 			return;
 		}
 		else if(com.equals("/javaFileDownload")) {
-			command = new JavaFileDownloadCommand3();
+			command = new JavaFileDownloadCommand();
 			command.execute(request, response);
 			return;
 		}
