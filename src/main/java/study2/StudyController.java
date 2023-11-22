@@ -10,22 +10,23 @@ import javax.servlet.http.HttpServletResponse;
 
 import study2.ajax1.AjaxTest1OkCommand;
 import study2.pdstest.FileDownloadCommand;
+import study2.pdstest.FileUpload1OkCommand;
 import study2.pdstest.FileUpload2OkCommand;
 import study2.pdstest.FileUpload3OkCommand;
 import study2.pdstest.FileUpload4OkCommand;
-import study2.pdstest.JavaFileDownloadCommand;
+import study2.pdstest.JavaFileDownloadCommand3;
 import study2.pdstest.TempFileDeleteCommand;
 
 @SuppressWarnings("serial")
 @WebServlet("*.st")
-public class StudyController extends HttpServlet{
+public class StudyController extends HttpServlet {
 	@Override
 	protected void service(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		StudyInterface command = null;
 		String viewPage = "/WEB-INF/study2";
 		
 		String com = request.getRequestURI();
-		com = com.substring(com.lastIndexOf("/"), com.lastIndexOf("."));
+		com = com.substring(com.lastIndexOf("/"),com.lastIndexOf("."));
 		
 		if(com.equals("/ajaxTest1")) {
 			viewPage += "/ajax1/ajaxTest1.jsp";
@@ -81,10 +82,21 @@ public class StudyController extends HttpServlet{
 			return;
 		}
 		else if(com.equals("/javaFileDownload")) {
-			command = new JavaFileDownloadCommand();
+			command = new JavaFileDownloadCommand3();
 			command.execute(request, response);
 			return;
 		}
+		else if(com.equals("/calendar1")) {
+			command = new Calendar1Command();
+			command.execute(request, response);
+			viewPage += "/calendar/calendar1.jsp";
+		}
+		else if(com.equals("/calendar2")) {
+			command = new Calendar2Command();
+			command.execute(request, response);
+			viewPage += "/calendar/calendar2.jsp";
+		}
+		
 		request.getRequestDispatcher(viewPage).forward(request, response);
 	}
 }
